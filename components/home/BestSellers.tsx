@@ -14,17 +14,26 @@ export default function BestSellers() {
   useEffect(() => {
     async function load() {
       try {
-        const [fData, bData] = await Promise.all([
+        let [fData, bData] = await Promise.all([
           getProducts({ featured: true, per_page: 8 }),
           getProducts({ tag: 'best-seller', per_page: 4 })
         ]);
-        // Fallbacks if no data
+
+        // If they don't have featured/tagged products set up yet, just pull recent products
+        if (!fData || fData.length === 0) {
+          fData = await getProducts({ per_page: 8 });
+        }
+        if (!bData || bData.length === 0) {
+          bData = await getProducts({ per_page: 4, offset: 8 }); // get the next 4
+        }
+
+        // Fallbacks if the store is completely empty
         const mockProducts = Array.from({ length: 8 }).map((_, i) => ({
           id: i, slug: `product-${i}`, name: `Luxury Nail Set ${i+1}`, price: "2500", images: []
         })) as unknown as Product[];
         
-        setFeatured(fData.length ? fData : mockProducts);
-        setBestSellers(bData.length ? bData : mockProducts.slice(0, 4));
+        setFeatured(fData && fData.length ? fData : mockProducts);
+        setBestSellers(bData && bData.length ? bData : mockProducts.slice(0, 4));
       } catch (e) {
         console.error(e);
       } finally {
