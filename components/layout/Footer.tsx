@@ -1,0 +1,98 @@
+'use client';
+import Link from 'next/link';
+import { Instagram, Facebook, Twitter, Youtube } from 'lucide-react';
+import { motion } from 'framer-motion';
+
+export default function Footer() {
+  return (
+    <footer className="bg-dark text-white pt-16 pb-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
+          {/* Brand */}
+          <div className="space-y-6">
+            <Link href="/" className="inline-block">
+              <span className="font-heading italic text-gold text-3xl block">Eve Gleam</span>
+            </Link>
+            <p className="text-gray-400 max-w-sm">
+              Premium accessories for the modern woman. Handcrafted press-on nails and luxury jewelry.
+            </p>
+            <div className="flex space-x-4">
+              {[Instagram, Facebook, Twitter, Youtube].map((Icon, i) => (
+                <motion.a
+                  key={i}
+                  href="#"
+                  whileHover={{ scale: 1.2, color: '#C9956B' }}
+                  className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white transition-colors"
+                >
+                  <Icon size={18} />
+                </motion.a>
+              ))}
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h4 className="font-heading text-xl mb-6 text-gold">Quick Links</h4>
+            <ul className="space-y-4">
+              {['Home', 'Shop', 'Collections', 'Sizing', 'About', 'Contact'].map((item) => (
+                <li key={item}>
+                  <Link href={item === 'Home' ? '/' : `/${item.toLowerCase()}`} className="text-gray-400 hover:text-gold transition-colors duration-200">
+                    {item}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Customer Care + Newsletter */}
+          <div>
+            <h4 className="font-heading text-xl mb-6 text-gold">Customer Care</h4>
+            <ul className="space-y-4 mb-8">
+              {['Contact Us', 'Terms & Policy', 'Secure Payment'].map((item) => (
+                <li key={item}>
+                  <Link href="#" className="text-gray-400 hover:text-gold transition-colors duration-200">
+                    {item}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            
+            <h4 className="font-heading text-xl mb-4 text-gold">Newsletter</h4>
+            <form className="flex" onSubmit={(e) => e.preventDefault()}>
+              <input
+                type="email"
+                placeholder="Your email address"
+                className="bg-[#2D2D2D] text-white px-4 py-2 w-full rounded-l-md border border-transparent focus:outline-none focus:border-gold transition-colors"
+              />
+              <button
+                type="submit"
+                className="bg-gold px-6 py-2 rounded-r-md text-white font-medium hover:bg-gold-deep transition-colors"
+              >
+                Subscribe
+              </button>
+            </form>
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+          <div className="flex space-x-2">
+            {['COD', 'EasyPaisa', 'JazzCash', 'Bank Transfer'].map((method) => (
+              <span key={method} className="px-3 py-1 bg-white/5 rounded-full text-xs border border-white/10">
+                {method}
+              </span>
+            ))}
+          </div>
+          
+          <div className="flex space-x-6 text-gray-400 text-xs">
+            <span>🔒 SSL Secured</span>
+            <span>🚚 Fast Delivery</span>
+            <span>🛡️ Secure Payment</span>
+          </div>
+
+          <p>© {new Date().getFullYear()} Eve Gleam. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  );
+}

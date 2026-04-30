@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body {
+    @apply bg-bg text-dark-soft font-body;
+    scroll-behavior: smooth;
+  }
+}
+
+.faq-answer {
+  @apply pb-6 text-dark-soft leading-relaxed;
+}
+
+/* Hide scrollbar for marquee if needed, though we use CSS animation */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #FFFAF8;
+}
+::-webkit-scrollbar-thumb {
+  background: #E8C9A8;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C9956B;
+}
