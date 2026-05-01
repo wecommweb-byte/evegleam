@@ -4,7 +4,6 @@ import { getProducts, getCategories } from '@/lib/woocommerce';
 import ProductCard from '@/components/shop/ProductCard';
 import { Product, Category } from '@/lib/types';
 import { motion } from 'framer-motion';
-import { useSearchParams, useRouter } from 'next/navigation';
 
 export default function ShopPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -14,50 +13,108 @@ export default function ShopPage() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   
-  // Actually Next.js 14 requires Suspense for useSearchParams, so we will use basic client state for simplicity or skip it for this component and fetch normally.
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [sortOption, setSortOption] = useState<string>('Latest');
 
+  // Load Categories once
   useEffect(() => {
-    async function init() {
+    async function loadCats() {
       try {
-        const [pData, cData] = await Promise.all([
-          getProducts({ per_page: 12, page: 1 }),
-          getCategories()
-        ]);
-        
-        // Fallback mockup
-        const mockP = Array.from({ length: 12 }).map((_, i) => ({
-          id: i, slug: `product-${i}`, name: `Premium Style ${i+1}`, price: "2500", images: []
-        })) as unknown as Product[];
-        const mockC = [
-          { id: 1, name: 'Press-On Nails', slug: 'nails', count: 12 },
-          { id: 2, name: 'Rings', slug: 'rings', count: 8 },
-          { id: 3, name: 'Necklaces', slug: 'necklaces', count: 5 },
-        ] as Category[];
-
-        setProducts(pData.length ? pData : mockP);
-        setCategories(cData.length ? cData : mockC);
+        const cData = await getCategories();
+        if (cData.length > 0) {
+          setCategories(cData);
+        } else {
+          setCategories([
+            { id: 1, name: 'Press-On Nails', slug: 'nails', count: 12 },
+            { id: 2, name: 'Rings', slug: 'rings', count: 8 },
+            { id: 3, name: 'Necklaces', slug: 'necklaces', count: 5 },
+          ] as Category[]);
+        }
       } catch (e) {
-        console.error(e);
+        console.warn('Failed to fetch categories:', e);
+      }
+    }
+    loadCats();
+  }, []);
+
+  // Fetch products when category, sort, or initial load happens
+  useEffect(() => {
+    async function fetchProducts() {
+      setLoading(true);
+      try {
+        const params: any = { per_page: 12, page: 1 };
+        if (selectedCategory) params.category = selectedCategory;
+        
+        if (sortOption === 'Price: Low to High') {
+          params.orderby = 'price';
+          params.order = 'asc';
+        } else if (sortOption === 'Price: High to Low') {
+          params.orderby = 'price';
+          params.order = 'desc';
+        } else if (sortOption === 'Most Popular') {
+          params.orderby = 'popularity';
+        } else {
+          params.orderby = 'date';
+          params.order = 'desc';
+        }
+
+        const pData = await getProducts(params);
+        
+        if (pData && pData.length > 0) {
+          setProducts(pData);
+          setHasMore(pData.length === 12);
+        } else {
+          setProducts([]);
+          setHasMore(false);
+          // Fallback if empty and no category selected
+          if (!selectedCategory && pData?.length === 0) {
+             const mockP = Array.from({ length: 12 }).map((_, i) => ({
+               id: i, slug: `product-${i}`, name: `Premium Style ${i+1}`, price: "2500", images: []
+             })) as unknown as Product[];
+             setProducts(mockP);
+             setHasMore(false);
+          }
+        }
+        setPage(1);
+      } catch (e) {
+        console.warn('Shop fetch error:', e);
       } finally {
         setLoading(false);
       }
     }
-    init();
-  }, []);
+    fetchProducts();
+  }, [selectedCategory, sortOption]);
 
   const loadMore = async () => {
     setLoadingMore(true);
     try {
       const nextPage = page + 1;
-      const moreProducts = await getProducts({ per_page: 12, page: nextPage });
+      const params: any = { per_page: 12, page: nextPage };
+      if (selectedCategory) params.category = selectedCategory;
+      
+      if (sortOption === 'Price: Low to High') {
+        params.orderby = 'price';
+        params.order = 'asc';
+      } else if (sortOption === 'Price: High to Low') {
+        params.orderby = 'price';
+        params.order = 'desc';
+      } else if (sortOption === 'Most Popular') {
+        params.orderby = 'popularity';
+      } else {
+        params.orderby = 'date';
+        params.order = 'desc';
+      }
+
+      const moreProducts = await getProducts(params);
       if (moreProducts.length === 0) {
         setHasMore(false);
       } else {
         setProducts(prev => [...prev, ...moreProducts]);
         setPage(nextPage);
+        setHasMore(moreProducts.length === 12);
       }
     } catch (e) {
-      console.error(e);
+      console.warn('Load more error:', e);
     } finally {
       setLoadingMore(false);
     }
@@ -75,17 +132,28 @@ export default function ShopPage() {
         {/* Filter Bar */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
           <div className="flex flex-wrap gap-3 justify-center">
-            <button className="px-6 py-2 rounded-full bg-gold text-white font-medium text-sm transition-colors">
+            <button 
+              onClick={() => setSelectedCategory(null)}
+              className={`px-6 py-2 rounded-full font-medium text-sm transition-colors ${selectedCategory === null ? 'bg-gold text-white' : 'border border-gold text-gold hover:bg-gold hover:text-white'}`}
+            >
               All Products
             </button>
             {categories.map(c => (
-              <button key={c.id} className="px-6 py-2 rounded-full border border-gold text-gold font-medium text-sm hover:bg-gold hover:text-white transition-colors">
+              <button 
+                key={c.id} 
+                onClick={() => setSelectedCategory(c.id)}
+                className={`px-6 py-2 rounded-full font-medium text-sm transition-colors ${selectedCategory === c.id ? 'bg-gold text-white' : 'border border-gold text-gold hover:bg-gold hover:text-white'}`}
+              >
                 {c.name}
               </button>
             ))}
           </div>
           
-          <select className="px-4 py-2 bg-transparent border border-gray-300 rounded-lg text-sm text-gray-700 focus:outline-none focus:border-gold">
+          <select 
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+            className="px-4 py-2 bg-transparent border border-gray-300 rounded-lg text-sm text-gray-700 focus:outline-none focus:border-gold"
+          >
             <option>Latest</option>
             <option>Price: Low to High</option>
             <option>Price: High to Low</option>
@@ -107,18 +175,24 @@ export default function ShopPage() {
           </div>
         ) : (
           <>
-            <motion.div 
-              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8"
-              initial="hidden"
-              animate="visible"
-              variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
-            >
-              {products.map((p, i) => (
-                <ProductCard key={`${p.id}-${i}`} product={p} index={i} />
-              ))}
-            </motion.div>
+            {products.length === 0 ? (
+              <div className="text-center py-20 text-gray-500">
+                <p>No products found in this category.</p>
+              </div>
+            ) : (
+              <motion.div 
+                className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8"
+                initial="hidden"
+                animate="visible"
+                variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
+              >
+                {products.map((p, i) => (
+                  <ProductCard key={`${p.id}-${i}`} product={p} index={i} />
+                ))}
+              </motion.div>
+            )}
 
-            {hasMore && (
+            {hasMore && products.length > 0 && (
               <div className="mt-16 text-center">
                 <button
                   onClick={loadMore}
