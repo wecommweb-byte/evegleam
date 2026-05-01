@@ -204,7 +204,7 @@ export default function CheckoutPage() {
                       </div>
                       <div className="flex-1">
                         <h4 className="text-sm font-medium text-dark line-clamp-1">{item.name}</h4>
-                        <p className="text-xs text-gray-500 mt-1">{item.variationName || item.variation || ''}</p>
+                        <p className="text-xs text-gray-500 mt-1">{item.variation || ''}</p>
                         <p className="text-sm text-dark mt-1">₨ {(item.price * item.quantity).toLocaleString()}</p>
                       </div>
                     </div>
