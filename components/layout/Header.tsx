@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, ShoppingBag, Menu, X } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
@@ -11,6 +12,10 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { itemCount, openCart } = useCart();
   const isDesktop = useIsDesktop();
+  const pathname = usePathname();
+
+  const isHome = pathname === '/';
+  const isTransparent = isHome && !scrolled;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,11 +33,11 @@ export default function Header() {
   ];
 
   const headerClass = `fixed top-0 left-0 right-0 z-50 transition-all duration-400 ease-in-out ${
-    scrolled ? 'bg-bg/90 backdrop-blur-md shadow-soft' : 'bg-transparent text-white'
+    !isTransparent ? 'bg-bg/90 backdrop-blur-md shadow-soft' : 'bg-transparent text-white'
   }`;
 
   const linkClass = `relative inline-block text-sm uppercase tracking-widest font-medium after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-gold after:left-0 after:-bottom-1 after:transition-all after:duration-300 hover:after:w-full ${
-    scrolled ? 'text-dark-soft' : 'text-white'
+    !isTransparent ? 'text-dark-soft' : 'text-white'
   }`;
 
   return (
@@ -60,12 +65,12 @@ export default function Header() {
 
             {/* Actions */}
             <div className="flex items-center space-x-6 z-50">
-              <button className={`hover:text-gold transition-colors ${scrolled ? 'text-dark-soft' : 'text-white'}`}>
+              <button className={`hover:text-gold transition-colors ${!isTransparent ? 'text-dark-soft' : 'text-white'}`}>
                 <Search size={20} />
               </button>
               <button 
                 onClick={openCart}
-                className={`relative hover:text-gold transition-colors ${scrolled ? 'text-dark-soft' : 'text-white'}`}
+                className={`relative hover:text-gold transition-colors ${!isTransparent ? 'text-dark-soft' : 'text-white'}`}
               >
                 <ShoppingBag size={20} />
                 <AnimatePresence>
@@ -85,7 +90,7 @@ export default function Header() {
 
               {/* Mobile menu button */}
               <button
-                className={`md:hidden ${scrolled || mobileMenuOpen ? 'text-dark-soft' : 'text-white'}`}
+                className={`md:hidden ${!isTransparent || mobileMenuOpen ? 'text-dark-soft' : 'text-white'}`}
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
                 {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
