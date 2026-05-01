@@ -3,7 +3,8 @@ const KEY = process.env.NEXT_PUBLIC_WC_KEY;
 const SECRET = process.env.NEXT_PUBLIC_WC_SECRET;
 
 function wcUrl(endpoint: string, params: Record<string, any> = {}) {
-  const url = new URL(`${BASE}/wp-json/wc/v3/${endpoint}`);
+  const baseUrl = BASE?.replace(/\/$/, '') || '';
+  const url = new URL(`${baseUrl}/wp-json/wc/v3/${endpoint}`);
   url.searchParams.set('consumer_key', KEY!);
   url.searchParams.set('consumer_secret', SECRET!);
   Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, String(v)));
@@ -16,7 +17,7 @@ export async function getProducts(params = {}) {
     if (!res.ok) throw new Error('Failed to fetch products');
     return res.json();
   } catch (error) {
-    console.error(error);
+    console.warn('WooCommerce fetch error:', error);
     return [];
   }
 }
@@ -27,7 +28,7 @@ export async function getProductBySlug(slug: string) {
     const data = await res.json();
     return data[0] ?? null;
   } catch (error) {
-    console.error(error);
+    console.warn('WooCommerce fetch error:', error);
     return null;
   }
 }
@@ -37,7 +38,7 @@ export async function getCategories() {
     const res = await fetch(wcUrl('products/categories', { per_page: 50, hide_empty: true }));
     return res.json();
   } catch (error) {
-    console.error(error);
+    console.warn('WooCommerce fetch error:', error);
     return [];
   }
 }
@@ -51,7 +52,7 @@ export async function getProductVariations(productId: number) {
     const res = await fetch(wcUrl(`products/${productId}/variations`));
     return res.json();
   } catch (error) {
-    console.error(error);
+    console.warn('WooCommerce fetch error:', error);
     return [];
   }
 }

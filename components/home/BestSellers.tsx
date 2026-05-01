@@ -35,7 +35,7 @@ export default function BestSellers() {
         setFeatured(fData && fData.length ? fData : mockProducts);
         setBestSellers(bData && bData.length ? bData : mockProducts.slice(0, 4));
       } catch (e) {
-        console.error(e);
+        console.warn('BestSellers fetch error:', e);
       } finally {
         setLoading(false);
       }
