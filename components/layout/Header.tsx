@@ -10,12 +10,17 @@ import { useIsDesktop } from '@/hooks/useScrollAnimation';
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { itemCount, openCart } = useCart();
   const isDesktop = useIsDesktop();
   const pathname = usePathname();
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const isHome = pathname === '/';
-  const isTransparent = isHome && !scrolled;
+  const isTransparent = (!mounted) ? true : (isHome && !scrolled);
 
   useEffect(() => {
     const handleScroll = () => {

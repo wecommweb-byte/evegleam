@@ -18,10 +18,20 @@ export default function CheckoutPage() {
     phone: '',
     address: '',
     city: '',
-    state: '',
+    state: 'PB', // Default to Punjab
     zip: '',
-    country: 'US',
+    country: 'PK', // Pakistan
   });
+
+  const PAKISTAN_STATES = [
+    { code: 'PB', name: 'Punjab' },
+    { code: 'SD', name: 'Sindh' },
+    { code: 'KP', name: 'Khyber Pakhtunkhwa' },
+    { code: 'BA', name: 'Balochistan' },
+    { code: 'IS', name: 'Islamabad' },
+    { code: 'GB', name: 'Gilgit-Baltistan' },
+    { code: 'JK', name: 'Azad Kashmir' },
+  ];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -37,6 +47,7 @@ export default function CheckoutPage() {
         payment_method: 'cod', // Cash on delivery or basic method
         payment_method_title: 'Cash on Delivery',
         set_paid: false,
+        status: 'processing', // Automatically move to processing
         billing: {
           first_name: formData.firstName,
           last_name: formData.lastName,
@@ -158,7 +169,11 @@ export default function CheckoutPage() {
                   </div>
                   <div>
                     <label className="block text-sm text-gray-500 mb-2">State / Province</label>
-                    <input required type="text" name="state" value={formData.state} onChange={handleChange} className="w-full px-4 py-3 bg-bg border-none rounded-xl focus:ring-2 focus:ring-gold outline-none" />
+                    <select required name="state" value={formData.state} onChange={handleChange as any} className="w-full px-4 py-3 bg-bg border-none rounded-xl focus:ring-2 focus:ring-gold outline-none">
+                      {PAKISTAN_STATES.map(state => (
+                        <option key={state.code} value={state.code}>{state.name}</option>
+                      ))}
+                    </select>
                   </div>
                   <div>
                     <label className="block text-sm text-gray-500 mb-2">ZIP / Postal Code</label>
@@ -166,7 +181,7 @@ export default function CheckoutPage() {
                   </div>
                   <div>
                     <label className="block text-sm text-gray-500 mb-2">Country</label>
-                    <input required type="text" name="country" value={formData.country} onChange={handleChange} className="w-full px-4 py-3 bg-bg border-none rounded-xl focus:ring-2 focus:ring-gold outline-none" />
+                    <input required readOnly type="text" value="Pakistan" className="w-full px-4 py-3 bg-bg border-none rounded-xl focus:ring-2 focus:ring-gold outline-none text-gray-500 cursor-not-allowed" />
                   </div>
                 </div>
 
