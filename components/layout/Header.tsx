@@ -39,12 +39,10 @@ export default function Header() {
   ];
 
   const headerClass = `fixed top-0 left-0 right-0 z-50 transition-all duration-400 ease-in-out ${
-    !isTransparent ? 'bg-bg/90 backdrop-blur-md shadow-soft' : 'bg-transparent text-white'
+    !isTransparent ? 'bg-gold backdrop-blur-md shadow-soft' : 'bg-transparent text-white'
   }`;
 
-  const linkClass = `relative inline-block text-sm uppercase tracking-widest font-medium after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-gold after:left-0 after:-bottom-1 after:transition-all after:duration-300 hover:after:w-full ${
-    !isTransparent ? 'text-dark-soft' : 'text-white'
-  }`;
+  const linkClass = `relative inline-block text-sm uppercase tracking-widest font-medium after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-white after:left-0 after:-bottom-1 after:transition-all after:duration-300 hover:after:w-full text-white`;
 
   return (
     <>
@@ -74,12 +72,12 @@ export default function Header() {
 
             {/* Actions */}
             <div className="flex items-center space-x-6 z-50">
-              <button className={`hover:text-gold transition-colors ${!isTransparent ? 'text-dark-soft' : 'text-white'}`}>
+              <button className="hover:text-white/70 transition-colors text-white">
                 <Search size={20} />
               </button>
               <button 
                 onClick={openCart}
-                className={`relative hover:text-gold transition-colors ${!isTransparent ? 'text-dark-soft' : 'text-white'}`}
+                className="relative hover:text-white/70 transition-colors text-white"
               >
                 <ShoppingBag size={20} />
                 <AnimatePresence>
@@ -89,7 +87,7 @@ export default function Header() {
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       exit={{ scale: 0 }}
-                      className="absolute -top-2 -right-2 bg-gold text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold"
+                      className="absolute -top-2 -right-2 bg-white text-gold text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold"
                     >
                       {itemCount}
                     </motion.span>
@@ -99,7 +97,7 @@ export default function Header() {
 
               {/* Mobile menu button */}
               <button
-                className={`md:hidden ${!isTransparent || mobileMenuOpen ? 'text-dark-soft' : 'text-white'}`}
+                className="md:hidden text-white"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
                 {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
