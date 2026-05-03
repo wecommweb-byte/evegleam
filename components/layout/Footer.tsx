@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Instagram, Facebook, Twitter, Youtube } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -11,7 +12,13 @@ export default function Footer() {
           {/* Brand */}
           <div className="space-y-6">
             <Link href="/" className="inline-block">
-              <span className="font-heading italic text-gold text-3xl block">Eve Gleam</span>
+              <Image 
+                src="/logo.png" 
+                alt="Eve Gleam" 
+                width={120} 
+                height={120} 
+                className="object-contain bg-white rounded-full"
+              />
             </Link>
             <p className="text-gray-400 max-w-sm">
               Premium accessories for the modern woman. Handcrafted press-on nails and luxury jewelry.
@@ -21,7 +28,7 @@ export default function Footer() {
                 <motion.a
                   key={i}
                   href="#"
-                  whileHover={{ scale: 1.2, color: '#C9956B' }}
+                  whileHover={{ scale: 1.2, color: '#e96789' }}
                   className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white transition-colors"
                 >
                   <Icon size={18} />

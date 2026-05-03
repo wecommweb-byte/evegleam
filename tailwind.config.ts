@@ -5,9 +5,9 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        gold: '#C9956B',
-        'gold-deep': '#A8784E',
-        'gold-light': '#E8C9A8',
+        gold: '#e96789',
+        'gold-deep': '#d84b72',
+        'gold-light': '#f6b8c8',
         blush: '#F7EDE8',
         'blush-deep': '#EDD5C8',
         dark: '#1A1A1A',
@@ -23,8 +23,8 @@ const config: Config = {
         brand: '16px',
       },
       boxShadow: {
-        gold: '0 0 20px rgba(201, 149, 107, 0.4)',
-        'gold-lg': '0 8px 40px rgba(201, 149, 107, 0.3)',
+        gold: '0 0 20px rgba(233, 103, 137, 0.4)',
+        'gold-lg': '0 8px 40px rgba(233, 103, 137, 0.3)',
         soft: '0 4px 20px rgba(0, 0, 0, 0.06)',
         'soft-lg': '0 12px 40px rgba(0, 0, 0, 0.1)',
       },

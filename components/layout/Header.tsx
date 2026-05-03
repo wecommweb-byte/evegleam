@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, ShoppingBag, Menu, X } from 'lucide-react';
@@ -51,12 +52,15 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-[60px] md:h-[80px]">
             {/* Logo */}
-            <Link href="/" className="flex-shrink-0 z-50">
-              <span className="font-heading italic text-gold text-2xl md:text-[1.4rem] leading-none block">
-                Eve
-                <br />
-                Gleam
-              </span>
+            <Link href="/" className="flex-shrink-0 z-50 flex items-center">
+              <Image 
+                src="/logo.png" 
+                alt="Eve Gleam" 
+                width={70} 
+                height={70} 
+                className="object-contain"
+                priority
+              />
             </Link>
 
             {/* Desktop Nav */}

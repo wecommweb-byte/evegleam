@@ -39,7 +39,7 @@ export default function HeroSection() {
           options={{
             fullScreen: { enable: false },
             particles: {
-              color: { value: '#C9956B' },
+              color: { value: '#e96789' },
               shape: { type: 'star' },
               opacity: { value: { min: 0.4, max: 0.8 } },
               size: { value: { min: 2, max: 4 } },

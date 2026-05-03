@@ -53,7 +53,7 @@ export default function HowItWorks() {
               ref={lineRef}
               className="absolute top-[32px] left-[20%] right-[20%] h-[2px] origin-left"
               style={{
-                background: 'repeating-linear-gradient(90deg, #C9956B 0px, #C9956B 8px, transparent 8px, transparent 18px)'
+                background: 'repeating-linear-gradient(90deg, #e96789 0px, #e96789 8px, transparent 8px, transparent 18px)'
               }}
             />
           )}
