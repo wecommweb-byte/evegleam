@@ -17,7 +17,7 @@ export default function Footer() {
                 alt="Eve Gleam" 
                 width={120} 
                 height={120} 
-                className="object-contain bg-white rounded-full"
+                className="object-contain"
               />
             </Link>
             <p className="text-brand-dark/80 max-w-sm">

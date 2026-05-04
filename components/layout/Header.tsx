@@ -20,9 +20,6 @@ export default function Header() {
     setMounted(true);
   }, []);
 
-  const isHome = pathname === '/';
-  const isTransparent = (!mounted) ? true : (isHome && !scrolled);
-
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 60);
@@ -38,9 +35,7 @@ export default function Header() {
     { name: 'Contact', href: '/contact' },
   ];
 
-  const headerClass = `fixed top-0 left-0 right-0 z-50 transition-all duration-400 ease-in-out ${
-    !isTransparent ? 'bg-brand-pink backdrop-blur-md shadow-soft text-brand-dark' : 'bg-transparent text-white'
-  }`;
+  const headerClass = `fixed top-0 left-0 right-0 z-50 transition-all duration-400 ease-in-out bg-brand-pink backdrop-blur-md shadow-soft text-brand-dark`;
 
   const linkClass = `relative inline-block text-sm uppercase tracking-widest font-medium after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-current after:left-0 after:-bottom-1 after:transition-all after:duration-300 hover:after:w-full`;
 
