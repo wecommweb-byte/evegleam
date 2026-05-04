@@ -36,13 +36,13 @@ export default function CartDrawer() {
             <div className="flex-1 overflow-y-auto p-6">
               {items.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center space-y-4">
-                  <div className="w-20 h-20 bg-blush rounded-full flex items-center justify-center text-gold">
+                  <div className="w-20 h-20 bg-brand-pink-light rounded-full flex items-center justify-center text-brand-dark">
                     <ShoppingBag size={32} />
                   </div>
                   <h3 className="font-heading text-xl">Your bag is empty</h3>
                   <button
                     onClick={closeCart}
-                    className="mt-4 px-8 py-3 bg-gold text-white rounded-full hover:bg-gold-deep transition-colors"
+                    className="mt-4 px-8 py-3 bg-brand-pink text-brand-dark rounded-full hover:bg-brand-gold transition-colors"
                   >
                     Start Shopping
                   </button>
@@ -84,19 +84,19 @@ export default function CartDrawer() {
                             <div className="flex items-center border border-gray-200 rounded-full px-2 py-1">
                               <button
                                 onClick={() => updateQuantity(item.id, item.quantity - 1, item.variationId)}
-                                className="p-1 hover:text-gold transition-colors"
+                                className="p-1 hover:text-brand-dark/80 transition-colors"
                               >
                                 <Minus size={14} />
                               </button>
                               <span className="text-xs font-medium w-6 text-center">{item.quantity}</span>
                               <button
                                 onClick={() => updateQuantity(item.id, item.quantity + 1, item.variationId)}
-                                className="p-1 hover:text-gold transition-colors"
+                                className="p-1 hover:text-brand-dark/80 transition-colors"
                               >
                                 <Plus size={14} />
                               </button>
                             </div>
-                            <span className="font-heading font-medium text-gold">₨ {item.price.toLocaleString()}</span>
+                            <span className="font-heading font-medium text-brand-dark">₨ {item.price.toLocaleString()}</span>
                           </div>
                         </div>
                       </motion.div>
@@ -113,7 +113,7 @@ export default function CartDrawer() {
                   <span className="font-heading font-semibold text-xl text-dark">₨ {total.toLocaleString()}</span>
                 </div>
                 <Link href="/checkout" onClick={closeCart} className="block w-full">
-                  <button className="w-full bg-gold text-white py-4 rounded-full font-medium tracking-wide hover:bg-gold-deep transition-colors shadow-gold text-center">
+                  <button className="w-full bg-brand-pink text-brand-dark py-4 rounded-full font-medium tracking-wide hover:bg-brand-gold transition-colors shadow-soft text-center">
                     Proceed to Checkout →
                   </button>
                 </Link>

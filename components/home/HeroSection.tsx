@@ -39,7 +39,7 @@ export default function HeroSection() {
           options={{
             fullScreen: { enable: false },
             particles: {
-              color: { value: '#e96789' },
+              color: { value: '#FBD4D9' },
               shape: { type: 'star' },
               opacity: { value: { min: 0.4, max: 0.8 } },
               size: { value: { min: 2, max: 4 } },
@@ -56,7 +56,7 @@ export default function HeroSection() {
           initial={isDesktop ? { opacity: 0, y: 20 } : false}
           animate={isDesktop ? { opacity: 1, y: 0 } : false}
           transition={{ delay: 0.2, duration: 0.7 }}
-          className="text-gold tracking-[0.2em] text-xs md:text-sm font-medium mb-6 uppercase"
+          className="text-brand-gold tracking-[0.2em] text-xs md:text-sm font-medium mb-6 uppercase"
         >
           ✦ Premium Press-On Nails & Jewelry
         </motion.p>
@@ -86,7 +86,7 @@ export default function HeroSection() {
           className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 w-full sm:w-auto"
         >
           <Link href="/shop" className="w-full sm:w-auto">
-            <button className="w-full sm:w-auto bg-gold text-white px-8 py-3 rounded-full font-medium hover:bg-gold-deep transition-all duration-300 hover:scale-105 hover:shadow-gold">
+            <button className="w-full sm:w-auto bg-brand-pink text-brand-dark px-8 py-3 rounded-full font-medium hover:bg-brand-gold transition-all duration-300 hover:scale-105 hover:shadow-soft hover:text-white">
               Shop Collection
             </button>
           </Link>

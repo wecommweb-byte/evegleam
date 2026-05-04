@@ -77,7 +77,7 @@ export default function BestSellers() {
           )}
           <div className="mt-12 text-center">
             <Link href="/shop">
-              <button className="px-8 py-3 rounded-full border-2 border-gold text-gold font-medium hover:bg-gold hover:text-white transition-colors duration-300">
+              <button className="px-8 py-3 rounded-full border-2 border-brand-gold text-brand-gold font-medium hover:bg-brand-gold hover:text-brand-dark transition-colors duration-300">
                 View All Products
               </button>
             </Link>

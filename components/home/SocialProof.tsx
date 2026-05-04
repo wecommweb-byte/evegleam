@@ -73,7 +73,7 @@ export default function SocialProof() {
                   hidden: { opacity: 0, y: isDesktop ? 30 : 0 },
                   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
                 }}
-                className="min-w-[85vw] md:min-w-0 snap-center bg-white rounded-2xl shadow-soft border border-blush overflow-hidden flex flex-col"
+                className="min-w-[85vw] md:min-w-0 snap-center bg-white rounded-2xl shadow-soft border border-brand-pink overflow-hidden flex flex-col"
               >
                 <div className="bg-[#25D366] text-white px-4 py-3 flex items-center font-medium">
                   <div className="w-2 h-2 rounded-full bg-white mr-2" />
@@ -82,9 +82,9 @@ export default function SocialProof() {
                 <div className="p-6 flex-1 flex flex-col">
                   <div className="flex justify-between items-center mb-3">
                     <span className="font-semibold text-dark">{review.name}</span>
-                    <div className="text-gold tracking-tighter text-sm">★★★★★</div>
+                    <div className="text-brand-gold tracking-tighter text-sm">★★★★★</div>
                   </div>
-                  <p className="text-gray-600 leading-relaxed font-body">"{review.text}"</p>
+                  <p className="text-brand-dark/80 leading-relaxed font-body">"{review.text}"</p>
                 </div>
               </motion.div>
             ))}
@@ -104,7 +104,7 @@ export default function SocialProof() {
                   unoptimized
                   className="object-cover transition-transform duration-500 ease-out group-hover:scale-104"
                 />
-                <div className="absolute inset-0 border-2 border-transparent group-hover:border-gold transition-colors duration-300 z-10" />
+                <div className="absolute inset-0 border-2 border-transparent group-hover:border-brand-gold transition-colors duration-300 z-10" />
               </div>
             ))}
           </div>
@@ -121,7 +121,7 @@ export default function SocialProof() {
           }}
           className="text-center"
         >
-          <div className="text-gold text-2xl mb-2 tracking-widest">★★★★★ <span className="font-heading font-medium">4.9 / 5</span></div>
+          <div className="text-brand-gold text-2xl mb-2 tracking-widest">★★★★★ <span className="font-heading font-medium">4.9 / 5</span></div>
           <p className="text-xl text-dark font-body font-medium">
             Loved by <Counter from={0} to={500} />+ women across Pakistan
           </p>

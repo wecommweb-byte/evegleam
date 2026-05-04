@@ -75,7 +75,7 @@ export default function HowItWorks() {
                 className="flex flex-col items-center text-center"
               >
                 <div className="relative mb-6">
-                  <div className="w-16 h-16 bg-gold rounded-full flex items-center justify-center text-white shadow-gold-lg">
+                  <div className="w-16 h-16 bg-brand-pink-light rounded-full flex items-center justify-center text-brand-dark shadow-soft">
                     <step.icon size={28} />
                   </div>
                   {/* Small circle badge */}

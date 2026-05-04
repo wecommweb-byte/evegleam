@@ -37,16 +37,16 @@ export default function BundleAndSave() {
               className="relative bg-white rounded-2xl border-2 border-gold p-8 text-center flex flex-col items-center overflow-hidden"
             >
               {bundle.popular && (
-                <div className="absolute top-6 -right-10 bg-gold text-white text-xs font-bold px-10 py-1 rotate-45 transform origin-center shadow-sm">
+                <div className="absolute top-6 -right-10 bg-brand-gold text-white text-xs font-bold px-10 py-1 rotate-45 transform origin-center shadow-sm">
                   MOST POPULAR
                 </div>
               )}
               
               <h3 className="font-heading italic text-2xl text-dark mb-4 mt-4">{bundle.title}</h3>
-              <div className="font-heading font-bold text-4xl text-gold mb-4">{bundle.discount}</div>
+              <div className="font-heading font-bold text-4xl text-brand-dark mb-4">{bundle.discount}</div>
               <p className="text-gray-500 font-body mb-8 flex-1">{bundle.desc}</p>
               
-              <button className="w-full bg-gold text-white rounded-full py-3 font-medium hover:bg-gold-deep transition-colors duration-300">
+              <button className="w-full bg-brand-pink text-brand-dark rounded-full py-3 font-medium hover:bg-brand-gold hover:text-white transition-colors duration-300">
                 Buy Now
               </button>
             </motion.div>

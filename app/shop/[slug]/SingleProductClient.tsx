@@ -119,7 +119,7 @@ export default function SingleProductClient({ slug }: { slug: string }) {
           {/* Product Info */}
           <div className="lg:w-[45%] flex flex-col pt-4 lg:pt-8">
             <h1 className="font-heading italic text-4xl lg:text-[2.5rem] text-dark mb-4">{product.name}</h1>
-            <div className="font-heading text-3xl text-gold mb-6">₨ {price}</div>
+            <div className="font-heading text-3xl text-brand-dark mb-6">₨ {price}</div>
             
             <div className="text-gray-600 font-body leading-relaxed mb-8" dangerouslySetInnerHTML={{ __html: product.short_description || '<p>A stunning handcrafted press-on nail set featuring premium materials and a perfect fit.</p>' }} />
 
@@ -127,9 +127,9 @@ export default function SingleProductClient({ slug }: { slug: string }) {
               <div className="flex items-center space-x-6">
                 <span className="font-medium text-dark w-20">Quantity</span>
                 <div className="flex items-center border border-gray-300 rounded-full px-4 py-2">
-                  <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="p-1 hover:text-gold transition-colors"><Minus size={18} /></button>
+                  <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="p-1 hover:text-brand-dark/80 transition-colors"><Minus size={18} /></button>
                   <span className="w-12 text-center font-medium">{quantity}</span>
-                  <button onClick={() => setQuantity(quantity + 1)} className="p-1 hover:text-gold transition-colors"><Plus size={18} /></button>
+                  <button onClick={() => setQuantity(quantity + 1)} className="p-1 hover:text-brand-dark/80 transition-colors"><Plus size={18} /></button>
                 </div>
               </div>
 
@@ -137,7 +137,7 @@ export default function SingleProductClient({ slug }: { slug: string }) {
                 <button
                   onClick={handleAdd}
                   className={`flex-1 flex items-center justify-center py-4 rounded-full font-medium transition-all duration-300 ${
-                    added ? 'bg-gold-deep text-white scale-[0.98]' : 'bg-gold text-white hover:bg-gold-deep shadow-gold'
+                    added ? 'bg-brand-pink text-brand-dark scale-[0.98]' : 'bg-brand-pink text-brand-dark hover:bg-brand-gold hover:text-white shadow-soft'
                   }`}
                 >
                   {added ? (
@@ -158,15 +158,15 @@ export default function SingleProductClient({ slug }: { slug: string }) {
             {/* Trust Badges */}
             <div className="flex justify-between border border-blush rounded-xl p-4 bg-white/50 text-sm">
               <div className="flex flex-col items-center text-center space-y-2">
-                <ShieldCheck className="text-gold" size={24} />
+                <ShieldCheck className="text-brand-dark" size={24} />
                 <span className="text-gray-600 font-medium text-xs">Secure<br/>Payment</span>
               </div>
               <div className="flex flex-col items-center text-center space-y-2">
-                <Truck className="text-gold" size={24} />
+                <Truck className="text-brand-dark" size={24} />
                 <span className="text-gray-600 font-medium text-xs">Free Delivery<br/>over ₨3K</span>
               </div>
               <div className="flex flex-col items-center text-center space-y-2">
-                <RefreshCcw className="text-gold" size={24} />
+                <RefreshCcw className="text-brand-dark" size={24} />
                 <span className="text-gray-600 font-medium text-xs">7 Days<br/>Returns</span>
               </div>
             </div>
@@ -199,7 +199,7 @@ export default function SingleProductClient({ slug }: { slug: string }) {
               {activeTab === 'sizing' && (
                 <motion.div key="size" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="text-gray-600">
                   <p className="mb-4">Not sure about your size? Download our free Sizing Guide PDF to measure your natural nails accurately.</p>
-                  <Link href="/sizing"><button className="text-gold underline">View Sizing Guide</button></Link>
+                  <Link href="/sizing"><button className="text-brand-dark underline">View Sizing Guide</button></Link>
                 </motion.div>
               )}
               {activeTab === 'reviews' && (

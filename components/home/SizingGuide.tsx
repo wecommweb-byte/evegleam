@@ -67,7 +67,7 @@ export default function SizingGuide() {
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.02 }}
-              className="group flex items-center justify-center bg-gold text-white px-8 py-4 rounded-full font-medium hover:bg-gold-deep transition-all duration-300 shadow-gold"
+              className="group flex items-center justify-center bg-brand-pink text-brand-dark px-8 py-4 rounded-full font-medium hover:bg-brand-gold transition-all duration-300 shadow-soft"
             >
               <motion.span
                 className="mr-3"

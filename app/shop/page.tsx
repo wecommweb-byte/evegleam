@@ -134,7 +134,7 @@ export default function ShopPage() {
           <div className="flex flex-wrap gap-3 justify-center">
             <button 
               onClick={() => setSelectedCategory(null)}
-              className={`px-6 py-2 rounded-full font-medium text-sm transition-colors ${selectedCategory === null ? 'bg-gold text-white' : 'border border-gold text-gold hover:bg-gold hover:text-white'}`}
+              className={`px-6 py-2 rounded-full font-medium text-sm transition-colors ${selectedCategory === null ? 'bg-brand-pink text-brand-dark' : 'border border-brand-gold text-brand-gold hover:bg-brand-gold hover:text-brand-dark'}`}
             >
               All Products
             </button>
@@ -142,7 +142,7 @@ export default function ShopPage() {
               <button 
                 key={c.id} 
                 onClick={() => setSelectedCategory(c.id)}
-                className={`px-6 py-2 rounded-full font-medium text-sm transition-colors ${selectedCategory === c.id ? 'bg-gold text-white' : 'border border-gold text-gold hover:bg-gold hover:text-white'}`}
+                className={`px-6 py-2 rounded-full font-medium text-sm transition-colors ${selectedCategory === c.id ? 'bg-brand-pink text-brand-dark' : 'border border-brand-gold text-brand-gold hover:bg-brand-gold hover:text-brand-dark'}`}
               >
                 {c.name}
               </button>
@@ -197,7 +197,7 @@ export default function ShopPage() {
                 <button
                   onClick={loadMore}
                   disabled={loadingMore}
-                  className="px-10 py-3 rounded-full border-2 border-gold text-gold font-medium hover:bg-gold hover:text-white transition-colors disabled:opacity-50"
+                  className="px-10 py-3 rounded-full border-2 border-brand-gold text-brand-gold font-medium hover:bg-brand-gold hover:text-brand-dark transition-colors disabled:opacity-50"
                 >
                   {loadingMore ? 'Loading...' : 'Load More'}
                 </button>

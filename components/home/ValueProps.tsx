@@ -42,7 +42,7 @@ export default function ValueProps() {
               <motion.div 
                 whileHover={isDesktop ? { rotate: 10, scale: 1.1 } : undefined}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="w-14 h-14 bg-gold rounded-full flex items-center justify-center text-white mb-6"
+                className="w-14 h-14 bg-brand-pink-light rounded-full flex items-center justify-center text-brand-dark mb-6"
               >
                 <card.icon size={24} />
               </motion.div>

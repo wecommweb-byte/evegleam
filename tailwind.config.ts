@@ -5,15 +5,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        gold: '#e96789',
-        'gold-deep': '#d84b72',
-        'gold-light': '#f6b8c8',
-        blush: '#F7EDE8',
-        'blush-deep': '#EDD5C8',
-        dark: '#1A1A1A',
-        'dark-soft': '#2D2D2D',
+        'brand-pink': '#FBD4D9',
+        'brand-pink-light': '#FBE5E7',
+        'brand-gold': '#C19860',
+        'brand-dark': '#0A0908',
+        gold: '#FBD4D9',
+        'gold-deep': '#C19860',
+        'gold-light': '#FBE5E7',
+        blush: '#FBD4D9',
+        'blush-deep': '#C19860',
+        dark: '#0A0908',
+        'dark-soft': '#0A0908',
         bg: '#FFFAF8',
-        accent: '#8B5E3C',
+        accent: '#C19860',
       },
       fontFamily: {
         heading: ['var(--font-heading)', 'Georgia', 'serif'],

@@ -105,7 +105,7 @@ export default function CheckoutPage() {
           <h1 className="font-heading italic text-4xl text-dark mb-4">Order Confirmed!</h1>
           <p className="text-gray-500 mb-8">Thank you for shopping with Eve Gleam. Your gorgeous accessories are being prepared.</p>
           <Link href="/shop">
-            <button className="px-8 py-3 rounded-full bg-gold text-white font-medium hover:bg-dark transition-colors">
+            <button className="px-8 py-3 rounded-full bg-brand-pink text-brand-dark font-medium hover:bg-brand-dark hover:text-white transition-colors">
               Continue Shopping
             </button>
           </Link>
@@ -123,7 +123,7 @@ export default function CheckoutPage() {
           <div className="text-center py-20 bg-white rounded-3xl shadow-soft">
             <h2 className="text-2xl text-dark mb-4">Your cart is empty</h2>
             <Link href="/shop">
-              <button className="px-8 py-3 rounded-full border-2 border-gold text-gold font-medium hover:bg-gold hover:text-white transition-colors">
+              <button className="px-8 py-3 rounded-full border-2 border-brand-gold text-brand-gold font-medium hover:bg-brand-gold hover:text-brand-dark transition-colors">
                 Go to Shop
               </button>
             </Link>
@@ -189,7 +189,7 @@ export default function CheckoutPage() {
                   <button 
                     type="submit" 
                     disabled={loading}
-                    className="w-full py-4 bg-dark text-white rounded-xl font-medium hover:bg-gold transition-colors disabled:opacity-50 flex items-center justify-center"
+                    className="w-full py-4 bg-brand-dark text-white rounded-xl font-medium hover:bg-brand-gold transition-colors disabled:opacity-50 flex items-center justify-center"
                   >
                     {loading ? (
                       <span className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></span>

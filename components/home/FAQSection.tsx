@@ -39,7 +39,7 @@ export default function FAQSection() {
                   <motion.span
                     animate={{ rotate: isOpen ? 45 : 0 }}
                     transition={{ duration: 0.3 }}
-                    className="text-gold text-2xl"
+                    className="text-brand-gold text-2xl"
                   >
                     +
                   </motion.span>

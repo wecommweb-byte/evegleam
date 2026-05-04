@@ -27,7 +27,7 @@ export default function SizingPage() {
         <div className="mb-24 space-y-12">
           {steps.map((step, i) => (
             <AnimatedSection key={i} delay={i * 0.1} className="flex items-start gap-6 bg-white p-8 rounded-2xl shadow-soft">
-              <div className="w-12 h-12 bg-gold rounded-full flex-shrink-0 flex items-center justify-center text-white font-heading text-xl font-bold">
+              <div className="w-12 h-12 bg-brand-pink-light rounded-full flex-shrink-0 flex items-center justify-center text-brand-dark font-heading text-xl font-bold">
                 {step.num}
               </div>
               <div>
@@ -81,7 +81,7 @@ export default function SizingPage() {
             target="_blank"
             rel="noopener noreferrer"
             whileHover={{ scale: 1.02 }}
-            className="inline-flex items-center justify-center bg-gold text-white px-10 py-5 rounded-full font-medium text-lg hover:bg-gold-deep transition-all duration-300 shadow-gold"
+            className="inline-flex items-center justify-center bg-brand-pink text-brand-dark px-10 py-5 rounded-full font-medium text-lg hover:bg-brand-gold hover:text-white transition-all duration-300 shadow-soft"
           >
             <Download size={24} className="mr-3" />
             Download PDF Guide

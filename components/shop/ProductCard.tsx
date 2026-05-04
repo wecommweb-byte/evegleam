@@ -45,7 +45,7 @@ export default function ProductCard({ product, index = 0 }: { product: Product, 
         {/* Quick View Button (Desktop only) */}
         {isDesktop && (
           <div className="absolute inset-x-0 bottom-0 p-4 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out z-10">
-            <button className="w-full py-3 bg-white/90 backdrop-blur-sm text-dark rounded-full font-medium shadow-sm hover:bg-gold hover:text-white transition-colors">
+            <button className="w-full py-3 bg-white/90 backdrop-blur-sm text-dark rounded-full font-medium shadow-sm hover:bg-brand-gold hover:text-brand-dark transition-colors">
               Quick View
             </button>
           </div>
@@ -55,20 +55,20 @@ export default function ProductCard({ product, index = 0 }: { product: Product, 
       <div className="p-5 flex flex-col flex-1">
         <h3 className="font-body font-medium text-dark truncate mb-1">{product.name}</h3>
         <div className="flex items-center space-x-1 mb-2">
-          <div className="flex text-gold">
+          <div className="flex text-brand-dark">
             {[...Array(5)].map((_, i) => (
               <Star key={i} size={12} fill="currentColor" strokeWidth={0} />
             ))}
           </div>
           <span className="text-xs text-gray-500 font-medium">4.9</span>
         </div>
-        <div className="text-gold font-heading text-[1.1rem] mb-4">₨ {price.toLocaleString()}</div>
+        <div className="text-brand-dark font-heading text-[1.1rem] mb-4">₨ {price.toLocaleString()}</div>
         
         <div className="mt-auto">
           <button
             onClick={handleAdd}
             className={`w-full py-2.5 rounded-full border border-gold font-medium flex items-center justify-center transition-all duration-300 ${
-              added ? 'bg-gold text-white' : 'text-gold hover:bg-gold hover:text-white'
+              added ? 'bg-brand-pink text-brand-dark' : 'text-brand-gold hover:bg-brand-gold hover:text-brand-dark'
             }`}
           >
             {added ? (
