@@ -14,7 +14,7 @@ export default function SizingPage() {
   return (
     <div className="bg-bg min-h-screen pb-24">
       {/* Hero */}
-      <div className="bg-blush py-20 text-center border-b border-blush-deep px-4">
+      <div className="bg-blush bg-texture py-20 text-center border-b border-blush-deep px-4">
         <h1 className="font-heading italic text-[clamp(2.5rem,5vw,4.5rem)] text-dark mb-4">Find Your Perfect Fit</h1>
         <p className="text-gray-600 font-body max-w-xl mx-auto text-lg">
           Follow our simple guide to measure your nails accurately at home and guarantee a flawless, natural look.

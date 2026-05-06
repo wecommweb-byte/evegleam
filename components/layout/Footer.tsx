@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 
 export default function Footer() {
   return (
-    <footer className="bg-brand-pink text-brand-dark pt-16 pb-8 px-4 sm:px-6 lg:px-8">
+    <footer className="bg-brand-pink bg-texture text-brand-dark pt-16 pb-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
           {/* Brand */}

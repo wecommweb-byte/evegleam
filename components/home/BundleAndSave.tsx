@@ -12,7 +12,7 @@ export default function BundleAndSave() {
   const isDesktop = useIsDesktop();
 
   return (
-    <section className="py-24 bg-blush">
+    <section className="py-24 bg-blush bg-texture">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="font-heading italic text-[clamp(2.5rem,5vw,4rem)] text-dark">Bundle & Save</h2>

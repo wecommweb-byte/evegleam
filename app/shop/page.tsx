@@ -123,7 +123,7 @@ export default function ShopPage() {
   return (
     <div className="bg-bg min-h-screen">
       {/* Hero Bar */}
-      <div className="bg-blush py-16 text-center border-b border-blush-deep">
+      <div className="bg-blush bg-texture py-16 text-center border-b border-blush-deep">
         <h1 className="font-heading italic text-[clamp(2.5rem,5vw,4rem)] text-dark mb-4">Shop All</h1>
         <p className="text-gray-500 font-body">Discover our complete collection of premium accessories</p>
       </div>

@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, useMotionValue, animate } from 'framer-motion';
+import { Instagram } from 'lucide-react';
 import { useIsDesktop } from '@/hooks/useScrollAnimation';
 import AnimatedSection from '@/components/ui/AnimatedSection';
 
@@ -24,12 +25,12 @@ const reviews = [
 ];
 
 const images = [
-  "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400",
-  "https://images.unsplash.com/photo-1604654894616-df63bc536371?w=400",
-  "https://picsum.photos/seed/nail1/400/400",
-  "https://picsum.photos/seed/nail2/400/400",
-  "https://picsum.photos/seed/nail3/400/400",
-  "https://picsum.photos/seed/nail4/400/400",
+  "/ig-1.jpg",
+  "/ig-2.jpg",
+  "/ig-3.jpeg",
+  "/ig-4.jpeg",
+  "/ig-5.webp",
+  "/ig-6.jpg"
 ];
 
 function Counter({ from, to }: { from: number; to: number }) {
@@ -96,16 +97,25 @@ export default function SocialProof() {
           <h2 className="font-heading italic text-3xl text-dark text-center mb-10">Follow the Gleam</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
             {images.map((src, i) => (
-              <div key={i} className="relative aspect-square rounded-lg overflow-hidden group">
+              <a 
+                href="https://www.instagram.com/evegleam_nails/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                key={i} 
+                className="relative aspect-square rounded-lg overflow-hidden group cursor-pointer block"
+              >
                 <Image
                   src={src}
-                  alt={`UGC ${i + 1}`}
+                  alt={`Instagram Post ${i + 1}`}
                   fill
                   unoptimized
                   className="object-cover transition-transform duration-500 ease-out group-hover:scale-104"
                 />
-                <div className="absolute inset-0 border-2 border-transparent group-hover:border-brand-gold transition-colors duration-300 z-10" />
-              </div>
+                <div className="absolute inset-0 bg-dark/0 group-hover:bg-dark/20 transition-colors duration-300 z-10 flex items-center justify-center">
+                  <Instagram className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-8 h-8" />
+                </div>
+                <div className="absolute inset-0 border-2 border-transparent group-hover:border-brand-gold transition-colors duration-300 z-20 pointer-events-none" />
+              </a>
             ))}
           </div>
         </AnimatedSection>
