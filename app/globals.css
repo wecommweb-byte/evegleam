@@ -11,11 +11,25 @@
 
 @layer utilities {
   .bg-texture {
+    position: relative;
+  }
+  
+  .bg-texture::before {
+    content: '';
+    position: absolute;
+    inset: 0;
     background-image: url('/watercolor-texture.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-blend-mode: multiply;
+    background-size: 300px;
+    background-repeat: repeat;
+    opacity: 0.15;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .bg-texture > * {
+    position: relative;
+    z-index: 1;
   }
 }
 
