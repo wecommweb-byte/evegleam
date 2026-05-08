@@ -47,7 +47,7 @@ export default function Header() {
             {/* Logo */}
             <Link href="/" className="flex-shrink-0 z-50 flex items-center">
               <Image 
-                src="/logo.png.png" 
+                src="/logo.png" 
                 alt="Eve Gleam" 
                 width={70} 
                 height={70} 

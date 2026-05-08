@@ -13,7 +13,7 @@ export default function Footer() {
           <div className="space-y-6">
             <Link href="/" className="inline-block">
               <Image 
-                src="/logo.png.png" 
+                src="/logo.png" 
                 alt="Eve Gleam" 
                 width={120} 
                 height={120} 
