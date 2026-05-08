@@ -10,18 +10,18 @@
 }
 
 @layer utilities {
-  .bg-texture-1, .bg-texture-2, .bg-texture-3 {
+  .bg-texture-1, .bg-texture-2 {
     position: relative;
   }
   
-  .bg-texture-1::before, .bg-texture-2::before, .bg-texture-3::before {
+  .bg-texture-1::before, .bg-texture-2::before {
     content: '';
     position: absolute;
     inset: 0;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    opacity: 0.6;
+    opacity: 1;
     mix-blend-mode: multiply;
     pointer-events: none;
     z-index: 0;
@@ -29,9 +29,8 @@
 
   .bg-texture-1::before { background-image: url('/texture-1.jpg'); }
   .bg-texture-2::before { background-image: url('/texture-2.jpg'); }
-  .bg-texture-3::before { background-image: url('/texture-3.jpg'); }
 
-  .bg-texture-1 > *, .bg-texture-2 > *, .bg-texture-3 > * {
+  .bg-texture-1 > *, .bg-texture-2 > * {
     position: relative;
     z-index: 1;
   }
