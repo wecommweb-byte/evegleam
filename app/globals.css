@@ -10,24 +10,28 @@
 }
 
 @layer utilities {
-  .bg-texture {
+  .bg-texture-1, .bg-texture-2, .bg-texture-3 {
     position: relative;
   }
   
-  .bg-texture::before {
+  .bg-texture-1::before, .bg-texture-2::before, .bg-texture-3::before {
     content: '';
     position: absolute;
     inset: 0;
-    background-image: url('/watercolor-texture.png');
-    background-size: 300px;
-    background-repeat: repeat;
-    opacity: 0.15;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.6;
     mix-blend-mode: multiply;
     pointer-events: none;
     z-index: 0;
   }
 
-  .bg-texture > * {
+  .bg-texture-1::before { background-image: url('/texture-1.jpg'); }
+  .bg-texture-2::before { background-image: url('/texture-2.jpg'); }
+  .bg-texture-3::before { background-image: url('/texture-3.jpg'); }
+
+  .bg-texture-1 > *, .bg-texture-2 > *, .bg-texture-3 > * {
     position: relative;
     z-index: 1;
   }
