@@ -1,54 +1,33 @@
 'use client';
-import { useEffect, useState } from 'react';
+
 import { motion } from 'framer-motion';
-import Particles, { initParticlesEngine } from '@tsparticles/react';
-import { loadSlim } from '@tsparticles/slim';
+
 import { useIsDesktop } from '@/hooks/useScrollAnimation';
 import Link from 'next/link';
 
 export default function HeroSection() {
-  const [init, setInit] = useState(false);
   const isDesktop = useIsDesktop();
-
-  useEffect(() => {
-    if (isDesktop) {
-      initParticlesEngine(async (engine) => {
-        await loadSlim(engine);
-      }).then(() => {
-        setInit(true);
-      });
-    }
-  }, [isDesktop]);
 
   return (
     <section className="relative w-full h-[100vh] flex items-center justify-center overflow-hidden bg-dark -mt-[60px]">
-      {/* Background Image */}
-      <div 
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1604654894610-df63bc536371?w=1600)' }}
-      />
+      {/* Background Video */}
+      <div className="absolute inset-0 z-0 bg-dark">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover"
+          poster="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=1600"
+        >
+          <source src="/evegleam%20final%201.mp4" type="video/mp4" />
+        </video>
+      </div>
       
       {/* Dark Overlay */}
       <div className="absolute inset-0 z-10" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0.6) 100%)' }} />
 
-      {/* Particles */}
-      {init && isDesktop && (
-        <Particles
-          id="tsparticles"
-          className="absolute inset-0 z-20 pointer-events-none"
-          options={{
-            fullScreen: { enable: false },
-            particles: {
-              color: { value: '#FBD4D9' },
-              shape: { type: 'star' },
-              opacity: { value: { min: 0.4, max: 0.8 } },
-              size: { value: { min: 2, max: 4 } },
-              move: { enable: true, speed: 0.8, direction: 'top', outModes: 'out' },
-              number: { value: 40, density: { enable: true, width: 800, height: 800 } }
-            }
-          }}
-        />
-      )}
+
 
       {/* Content */}
       <div className="relative z-30 text-center px-4 max-w-4xl mx-auto flex flex-col items-center">
