@@ -22,6 +22,10 @@ const inter = Inter({
 export const metadata = {
   title: 'Eve Gleam | Premium Press-On Nails & Jewelry',
   description: 'Premium accessories for the modern woman. Handcrafted press-on nails and luxury jewelry.',
+  icons: {
+    icon: [{ url: '/logo.png', type: 'image/png' }],
+    apple: [{ url: '/logo.png', type: 'image/png' }],
+  },
 };
 
 export default function RootLayout({
