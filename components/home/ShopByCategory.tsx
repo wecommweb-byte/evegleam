@@ -8,22 +8,22 @@ const categories = [
   {
     name: 'Campus Cuties',
     image: '/cat-campus-cuties.png',
-    href: '/collections/campus-cuties',
+    href: '/shop?category=87',
   },
   {
     name: 'Vanilla Days',
     image: '/cat-vanilla-days.png',
-    href: '/collections/vanilla-days',
+    href: '/shop?category=88',
   },
   {
     name: 'The Statement',
     image: '/cat-the-statement.png',
-    href: '/collections/the-statement',
+    href: '/shop?category=89',
   },
   {
     name: 'Bridal Couture',
     image: '/cat-bridal-couture.png',
-    href: '/collections/bridal-couture',
+    href: '/shop?category=90',
   },
 ];
 

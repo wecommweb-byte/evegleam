@@ -1,20 +1,31 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { getProducts, getCategories } from '@/lib/woocommerce';
 import ProductCard from '@/components/shop/ProductCard';
 import { Product, Category } from '@/lib/types';
 import { motion } from 'framer-motion';
 
 export default function ShopPage() {
+  const searchParams = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+
+  const urlCategory = searchParams.get('category');
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(
+    urlCategory ? parseInt(urlCategory) : null
+  );
   const [sortOption, setSortOption] = useState<string>('Latest');
+
+  // Sync URL category param when it changes (e.g. navigating from homepage)
+  useEffect(() => {
+    const cat = searchParams.get('category');
+    setSelectedCategory(cat ? parseInt(cat) : null);
+  }, [searchParams]);
 
   // Load Categories once
   useEffect(() => {
