@@ -7,22 +7,22 @@ import { useIsDesktop } from '@/hooks/useScrollAnimation';
 const categories = [
   {
     name: 'Campus Cuties',
-    image: '/cat-campus-cuties.jpg',
+    image: '/cat-campus-cuties.png',
     href: '/collections/campus-cuties',
   },
   {
     name: 'Vanilla Days',
-    image: '/cat-vanilla-days.jpg',
+    image: '/cat-vanilla-days.png',
     href: '/collections/vanilla-days',
   },
   {
     name: 'The Statement',
-    image: '/cat-the-statement.jpg',
+    image: '/cat-the-statement.png',
     href: '/collections/the-statement',
   },
   {
     name: 'Bridal Couture',
-    image: '/cat-bridal-couture.jpg',
+    image: '/cat-bridal-couture.png',
     href: '/collections/bridal-couture',
   },
 ];
