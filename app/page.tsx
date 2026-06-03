@@ -14,8 +14,8 @@ export default function Home() {
     <>
       <HeroSection />
       <MarqueeStrip />
-      <ValueProps />
       <ShopByCategory />
+      <ValueProps />
       <BestSellers />
       <HowItWorks />
       <SizingGuide />
