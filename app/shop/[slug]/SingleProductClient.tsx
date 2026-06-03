@@ -24,25 +24,13 @@ export default function SingleProductClient({ slug }: { slug: string }) {
     async function load() {
       try {
         const p = await getProductBySlug(slug);
-        
-        // Mock fallback
-        const data = p || {
-          id: 999, slug: slug, name: 'Luminous Pearl Set', price: "3500",
-          description: '<p>Our Luminous Pearl Set features handcrafted press-on nails with genuine pearl accents. Perfect for bridals or formal wear. Includes 24 nails, adhesive tabs, and a cuticle pusher.</p>',
-          images: [
-            { src: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=800' },
-            { src: 'https://images.unsplash.com/photo-1604654894616-df63bc536371?w=800' }
-          ]
-        } as unknown as Product;
+        if (!p) { setLoading(false); return; }
 
-        setProduct(data);
-        setActiveImage(data.images?.[0]?.src || 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=800');
-        
-        // Load related mock
+        setProduct(p);
+        setActiveImage(p.images?.[0]?.src || '');
+
         const rData = await getProducts({ per_page: 4 });
-        setRelated(rData.length ? rData : Array.from({length: 4}).map((_, i) => ({
-          id: i, slug: `r-${i}`, name: `Related Style ${i}`, price: "2500", images: []
-        })) as unknown as Product[]);
+        setRelated(rData ?? []);
       } catch (e) {
         console.error(e);
       } finally {

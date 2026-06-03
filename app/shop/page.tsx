@@ -32,15 +32,7 @@ function ShopContent() {
     async function loadCats() {
       try {
         const cData = await getCategories();
-        if (cData.length > 0) {
-          setCategories(cData);
-        } else {
-          setCategories([
-            { id: 1, name: 'Press-On Nails', slug: 'nails', count: 12 },
-            { id: 2, name: 'Rings', slug: 'rings', count: 8 },
-            { id: 3, name: 'Necklaces', slug: 'necklaces', count: 5 },
-          ] as Category[]);
-        }
+        setCategories(cData ?? []);
       } catch (e) {
         console.warn('Failed to fetch categories:', e);
       }
@@ -71,21 +63,8 @@ function ShopContent() {
 
         const pData = await getProducts(params);
         
-        if (pData && pData.length > 0) {
-          setProducts(pData);
-          setHasMore(pData.length === 12);
-        } else {
-          setProducts([]);
-          setHasMore(false);
-          // Fallback if empty and no category selected
-          if (!selectedCategory && pData?.length === 0) {
-             const mockP = Array.from({ length: 12 }).map((_, i) => ({
-               id: i, slug: `product-${i}`, name: `Premium Style ${i+1}`, price: "2500", images: []
-             })) as unknown as Product[];
-             setProducts(mockP);
-             setHasMore(false);
-          }
-        }
+        setProducts(pData ?? []);
+        setHasMore((pData?.length ?? 0) === 12);
         setPage(1);
       } catch (e) {
         console.warn('Shop fetch error:', e);

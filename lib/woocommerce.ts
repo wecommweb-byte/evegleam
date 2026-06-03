@@ -11,57 +11,74 @@ function wcUrl(endpoint: string, params: Record<string, any> = {}) {
   return url.toString();
 }
 
-export async function getProducts(params = {}) {
+async function wcFetch(url: string, options: RequestInit = {}) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 15000); // 15s timeout
   try {
-    const res = await fetch(wcUrl('products', params));
-    if (!res.ok) throw new Error('Failed to fetch products');
+    const res = await fetch(url, { ...options, signal: controller.signal });
+    clearTimeout(timer);
+    return res;
+  } catch (err) {
+    clearTimeout(timer);
+    throw err;
+  }
+}
+
+export async function getProducts(params: Record<string, any> = {}) {
+  try {
+    const res = await wcFetch(wcUrl('products', params));
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return res.json();
   } catch (error) {
-    console.warn('WooCommerce fetch error:', error);
+    console.warn('WooCommerce getProducts error:', error);
     return [];
   }
 }
 
 export async function getProductBySlug(slug: string) {
   try {
-    const res = await fetch(wcUrl('products', { slug }));
+    const res = await wcFetch(wcUrl('products', { slug }));
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     return data[0] ?? null;
   } catch (error) {
-    console.warn('WooCommerce fetch error:', error);
+    console.warn('WooCommerce getProductBySlug error:', error);
     return null;
   }
 }
 
 export async function getCategories() {
   try {
-    const res = await fetch(wcUrl('products/categories', { per_page: 50, hide_empty: true }));
+    const res = await wcFetch(wcUrl('products/categories', { per_page: 50, hide_empty: true }));
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return res.json();
   } catch (error) {
-    console.warn('WooCommerce fetch error:', error);
+    console.warn('WooCommerce getCategories error:', error);
     return [];
   }
 }
 
-export async function getProductsByCategory(categoryId: number, params = {}) {
+export async function getProductsByCategory(categoryId: number, params: Record<string, any> = {}) {
   return getProducts({ category: categoryId, ...params });
 }
 
 export async function getProductVariations(productId: number) {
   try {
-    const res = await fetch(wcUrl(`products/${productId}/variations`));
+    const res = await wcFetch(wcUrl(`products/${productId}/variations`));
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return res.json();
   } catch (error) {
-    console.warn('WooCommerce fetch error:', error);
+    console.warn('WooCommerce getProductVariations error:', error);
     return [];
   }
 }
 
 export async function createOrder(orderData: any) {
-  const res = await fetch(wcUrl('orders'), {
+  const res = await wcFetch(wcUrl('orders'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(orderData),
   });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }

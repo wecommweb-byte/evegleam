@@ -10,32 +10,32 @@ export default function BestSellers() {
   const [featured, setFeatured] = useState<Product[]>([]);
   const [bestSellers, setBestSellers] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     async function load() {
       try {
-        let [fData, bData] = await Promise.all([
+        // Fetch all at once — featured flag + recent products
+        const [fData, recent] = await Promise.all([
           getProducts({ featured: true, per_page: 8 }),
-          getProducts({ tag: 'best-seller', per_page: 4 })
+          getProducts({ per_page: 8, orderby: 'date', order: 'desc' }),
         ]);
 
-        // If they don't have featured/tagged products set up yet, just pull recent products
-        if (!fData || fData.length === 0) {
-          fData = await getProducts({ per_page: 8 });
-        }
-        if (!bData || bData.length === 0) {
-          bData = await getProducts({ per_page: 4, offset: 8 }); // get the next 4
-        }
+        // Use featured if available, else fall back to most recent
+        const mostLoved: Product[] = fData?.length ? fData : recent;
+        // Best sellers: next 4 products after the first 8, or last 4 of recent
+        const bsData: Product[] = await getProducts({ per_page: 4, offset: 8, orderby: 'date', order: 'desc' });
+        const bestSellersData: Product[] = bsData?.length ? bsData : (recent?.slice(4, 8) ?? []);
 
-        // Fallbacks if the store is completely empty
-        const mockProducts = Array.from({ length: 8 }).map((_, i) => ({
-          id: i, slug: `product-${i}`, name: `Luxury Nail Set ${i+1}`, price: "2500", images: []
-        })) as unknown as Product[];
-        
-        setFeatured(fData && fData.length ? fData : mockProducts);
-        setBestSellers(bData && bData.length ? bData : mockProducts.slice(0, 4));
+        if (!mostLoved?.length && !bestSellersData?.length) {
+          setError(true);
+        } else {
+          setFeatured(mostLoved ?? []);
+          setBestSellers(bestSellersData ?? []);
+        }
       } catch (e) {
         console.warn('BestSellers fetch error:', e);
+        setError(true);
       } finally {
         setLoading(false);
       }
@@ -56,13 +56,16 @@ export default function BestSellers() {
     </div>
   );
 
+  if (error) return null; // silently hide if API is down — don't show fake data
+
   return (
     <section className="py-20 bg-bg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
         {/* Most Loved */}
         <div className="mb-24">
           <h2 className="font-heading italic text-[clamp(2.5rem,5vw,4rem)] text-dark text-center mb-12">Our Most Loved</h2>
-          {loading ? <Skeleton /> : (
+          {loading ? <Skeleton /> : featured.length > 0 ? (
             <motion.div
               initial="hidden"
               whileInView="visible"
@@ -74,7 +77,7 @@ export default function BestSellers() {
                 <ProductCard key={p.id} product={p} index={i} />
               ))}
             </motion.div>
-          )}
+          ) : null}
           <div className="mt-12 text-center">
             <Link href="/shop">
               <button className="px-8 py-3 rounded-full border-2 border-brand-gold text-brand-gold font-medium hover:bg-brand-gold hover:text-brand-dark transition-colors duration-300">
@@ -85,22 +88,25 @@ export default function BestSellers() {
         </div>
 
         {/* Best Sellers */}
-        <div>
-          <h2 className="font-heading italic text-[clamp(2.5rem,5vw,4rem)] text-dark text-center mb-12">Best Sellers</h2>
-          {loading ? <Skeleton /> : (
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-50px" }}
-              variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
-              className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8"
-            >
-              {bestSellers.map((p, i) => (
-                <ProductCard key={p.id} product={p} index={i} />
-              ))}
-            </motion.div>
-          )}
-        </div>
+        {(loading || bestSellers.length > 0) && (
+          <div>
+            <h2 className="font-heading italic text-[clamp(2.5rem,5vw,4rem)] text-dark text-center mb-12">Best Sellers</h2>
+            {loading ? <Skeleton /> : (
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-50px" }}
+                variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
+                className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8"
+              >
+                {bestSellers.map((p, i) => (
+                  <ProductCard key={p.id} product={p} index={i} />
+                ))}
+              </motion.div>
+            )}
+          </div>
+        )}
+
       </div>
     </section>
   );
