@@ -1,6 +1,7 @@
 import HeroSection from '@/components/home/HeroSection';
 import MarqueeStrip from '@/components/home/MarqueeStrip';
 import ValueProps from '@/components/home/ValueProps';
+import ShopByCategory from '@/components/home/ShopByCategory';
 import BestSellers from '@/components/home/BestSellers';
 import HowItWorks from '@/components/home/HowItWorks';
 import SizingGuide from '@/components/home/SizingGuide';
@@ -14,6 +15,7 @@ export default function Home() {
       <HeroSection />
       <MarqueeStrip />
       <ValueProps />
+      <ShopByCategory />
       <BestSellers />
       <HowItWorks />
       <SizingGuide />
