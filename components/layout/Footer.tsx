@@ -41,7 +41,7 @@ export default function Footer() {
           <div>
             <h4 className="font-heading text-xl mb-6 font-semibold">Quick Links</h4>
             <ul className="space-y-4">
-              {['Home', 'Shop', 'Collections', 'Sizing', 'About', 'Contact'].map((item) => (
+              {['Home', 'Shop', 'Collections', 'Sizing', 'Contact'].map((item) => (
                 <li key={item}>
                   <Link href={item === 'Home' ? '/' : `/${item.toLowerCase()}`} className="text-brand-dark/80 hover:text-brand-gold transition-colors duration-200">
                     {item}
@@ -55,10 +55,14 @@ export default function Footer() {
           <div>
             <h4 className="font-heading text-xl mb-6 font-semibold">Customer Care</h4>
             <ul className="space-y-4 mb-8">
-              {['Contact Us', 'Terms & Policy', 'Secure Payment'].map((item) => (
-                <li key={item}>
-                  <Link href="#" className="text-brand-dark/80 hover:text-brand-gold transition-colors duration-200">
-                    {item}
+              {[
+                { label: 'Contact Us', href: '/contact' },
+                { label: 'Sizing Guide', href: '/sizing' },
+                { label: 'Secure Payment', href: '#' },
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link href={item.href} className="text-brand-dark/80 hover:text-brand-gold transition-colors duration-200">
+                    {item.label}
                   </Link>
                 </li>
               ))}

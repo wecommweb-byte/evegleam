@@ -149,9 +149,11 @@ function ShopContent() {
             >
               All Products
             </button>
-            {categories.map(c => (
-              <button 
-                key={c.id} 
+            {categories
+              .filter(c => !['Uncategorized'].includes(c.name) && c.count > 0)
+              .map(c => (
+              <button
+                key={c.id}
                 onClick={() => setSelectedCategory(c.id)}
                 className={`px-6 py-2 rounded-full font-medium text-sm transition-colors ${selectedCategory === c.id ? 'bg-brand-pink text-brand-dark' : 'border border-brand-gold text-brand-gold hover:bg-brand-gold hover:text-brand-dark'}`}
               >

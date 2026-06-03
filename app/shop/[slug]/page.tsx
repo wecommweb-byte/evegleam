@@ -10,7 +10,10 @@ export async function generateStaticParams() {
       return [{ slug: 'fallback' }];
     }
     return products.map((p: any) => ({
-      slug: p.slug || p.id.toString(),
+      slug: (p.slug || p.id.toString())
+        .replace(/[^\x00-\x7F]/g, '')  // strip non-ASCII (em-dashes etc.)
+        .replace(/-+/g, '-')            // collapse multiple hyphens
+        .replace(/^-|-$/g, ''),         // trim leading/trailing hyphens
     }));
   } catch (e) {
     console.error('Failed to generate static params:', e);

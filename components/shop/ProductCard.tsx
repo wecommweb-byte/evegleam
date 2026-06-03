@@ -90,6 +90,11 @@ export default function ProductCard({ product, index = 0 }: { product: Product, 
     </div>
   );
 
+  const cleanSlug = (product.slug || String(product.id))
+    .replace(/[^\x00-\x7F]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+
   if (isDesktop) {
     return (
       <motion.div
@@ -100,7 +105,7 @@ export default function ProductCard({ product, index = 0 }: { product: Product, 
         whileHover={{ y: -4, transition: { type: 'spring', stiffness: 300, damping: 20 } }}
         className="h-full"
       >
-        <Link href={`/shop/${product.slug || product.id}`} className="block h-full">
+        <Link href={`/shop/${cleanSlug}`} className="block h-full">
           {cardContent}
         </Link>
       </motion.div>
@@ -108,7 +113,7 @@ export default function ProductCard({ product, index = 0 }: { product: Product, 
   }
 
   return (
-    <Link href={`/shop/${product.slug || product.id}`} className="block h-full">
+    <Link href={`/shop/${cleanSlug}`} className="block h-full">
       {cardContent}
     </Link>
   );
