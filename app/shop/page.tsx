@@ -1,12 +1,12 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { getProducts, getCategories } from '@/lib/woocommerce';
 import ProductCard from '@/components/shop/ProductCard';
 import { Product, Category } from '@/lib/types';
 import { motion } from 'framer-motion';
 
-export default function ShopPage() {
+function ShopContent() {
   const searchParams = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -218,5 +218,13 @@ export default function ShopPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function ShopPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-bg" />}>
+      <ShopContent />
+    </Suspense>
   );
 }
