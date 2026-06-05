@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react';
 import { CartItem } from '@/lib/types';
 
 interface CartContextType {
@@ -17,21 +17,32 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+function safeGetLocal(key: string): string | null {
+  try { return localStorage.getItem(key); } catch { return null; }
+}
+
+function safeSetLocal(key: string, value: string): void {
+  try { localStorage.setItem(key, value); } catch { /* blocked in private mode */ }
+}
+
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const hasLoaded = useRef(false); // prevent saving before first load completes
 
+  // Load cart from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem('evegleam_cart');
+    const saved = safeGetLocal('evegleam_cart');
     if (saved) {
-      try {
-        setItems(JSON.parse(saved));
-      } catch (e) {}
+      try { setItems(JSON.parse(saved)); } catch { /* corrupt data, ignore */ }
     }
+    hasLoaded.current = true;
   }, []);
 
+  // Save cart to localStorage whenever items change (but only after initial load)
   useEffect(() => {
-    localStorage.setItem('evegleam_cart', JSON.stringify(items));
+    if (!hasLoaded.current) return;
+    safeSetLocal('evegleam_cart', JSON.stringify(items));
   }, [items]);
 
   const addToCart = (item: CartItem) => {
@@ -53,13 +64,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const updateQuantity = (id: number, quantity: number, variationId?: number) => {
-    if (quantity < 1) {
-      removeFromCart(id, variationId);
-      return;
-    }
-    setItems(prev => prev.map(i => i.id === id && i.variationId === variationId
-      ? { ...i, quantity }
-      : i
+    if (quantity < 1) { removeFromCart(id, variationId); return; }
+    setItems(prev => prev.map(i =>
+      i.id === id && i.variationId === variationId ? { ...i, quantity } : i
     ));
   };
 
@@ -71,7 +78,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
   return (
     <CartContext.Provider value={{
       items, addToCart, removeFromCart, updateQuantity, clearCart,
-      total, itemCount, isOpen, openCart: () => setIsOpen(true), closeCart: () => setIsOpen(false)
+      total, itemCount, isOpen,
+      openCart: () => setIsOpen(true),
+      closeCart: () => setIsOpen(false),
     }}>
       {children}
     </CartContext.Provider>
