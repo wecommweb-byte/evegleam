@@ -17,8 +17,8 @@ export default function HeroSection() {
           loop
           muted
           playsInline
+          preload="auto"
           className="w-full h-full object-cover"
-          poster="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=1600"
         >
           <source src="/evegleam%20final%201.mp4" type="video/mp4" />
         </video>
