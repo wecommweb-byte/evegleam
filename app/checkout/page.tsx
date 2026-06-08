@@ -72,7 +72,14 @@ export default function CheckoutPage() {
           product_id: item.id,
           variation_id: item.variationId,
           quantity: item.quantity,
+          meta_data: item.variation
+            ? [{ key: 'Selected Nail Sets', value: item.variation }]
+            : [],
         })),
+        customer_note: items
+          .filter(item => item.variation)
+          .map(item => `${item.name}: ${item.variation}`)
+          .join('\n') || '',
       };
 
       const res = await createOrder(orderData);
