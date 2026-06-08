@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useIsDesktop } from '@/hooks/useScrollAnimation';
 
 const cards = [
-  { icon: Star, title: "Premium Quality", desc: "Handcrafted with care, every time" },
+  { icon: Star, title: "Premium Quality", desc: "Premium quality, every single time" },
   { icon: Truck, title: "Free Shipping", desc: "On all orders above ₨3,000" },
   { icon: Leaf, title: "Eco-Friendly", desc: "Sustainable materials, guilt-free glam" },
   { icon: Gift, title: "Gift Ready", desc: "Beautifully packaged for gifting" },
