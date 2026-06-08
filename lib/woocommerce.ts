@@ -82,3 +82,13 @@ export async function createOrder(orderData: any) {
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }
+
+export async function addOrderNote(orderId: number, note: string) {
+  const res = await wcFetch(wcUrl(`orders/${orderId}/notes`), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ note, customer_note: false }),
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}

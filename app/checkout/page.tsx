@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { motion } from 'framer-motion';
-import { createOrder } from '@/lib/woocommerce';
+import { createOrder, addOrderNote } from '@/lib/woocommerce';
 import Link from 'next/link';
 
 export default function CheckoutPage() {
@@ -83,8 +83,18 @@ export default function CheckoutPage() {
       };
 
       const res = await createOrder(orderData);
-      
+
       if (res && res.id) {
+        // Post bundle selections as a visible admin note in WooCommerce
+        const bundleNotes = items
+          .filter(item => item.variation)
+          .map(item => `🛍️ ${item.name}\n${item.variation}`)
+          .join('\n\n');
+
+        if (bundleNotes) {
+          await addOrderNote(res.id, `BUNDLE SELECTIONS:\n\n${bundleNotes}`).catch(() => {});
+        }
+
         setSuccess(true);
         clearCart();
       } else {
