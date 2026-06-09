@@ -40,10 +40,30 @@ function fixEncoding(str: string): string {
   }
 }
 
+/**
+ * Cleans a WooCommerce slug by removing percent-encoded garbage and non-ASCII chars.
+ * e.g. "lavender-meadows-a%c2%80%c2%93-long" → "lavender-meadows-a-long"
+ */
+function cleanSlug(slug: string): string {
+  if (!slug) return slug;
+  let s = slug;
+  // Strip ALL percent-encoded sequences (they are garbled bytes, not real content)
+  s = s.replace(/%[0-9a-fA-F]{2}/gi, '');
+  // Also try URL-decoding any remaining encoded chars and strip non-ASCII
+  try { s = decodeURIComponent(s); } catch { /* ignore */ }
+  return s
+    .replace(/[^\x20-\x7E]/g, '') // strip non-printable / non-ASCII
+    .replace(/[^a-zA-Z0-9-]/g, '-') // non-slug chars → hyphen
+    .replace(/-+/g, '-')             // collapse hyphens
+    .replace(/^-|-$/g, '')           // trim edges
+    .toLowerCase();
+}
+
 function fixProduct(product: any): any {
   if (!product) return product;
   return {
     ...product,
+    slug: cleanSlug(product.slug),
     name: fixEncoding(product.name),
     short_description: fixEncoding(product.short_description),
     description: fixEncoding(product.description),

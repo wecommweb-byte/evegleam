@@ -16,10 +16,23 @@ function fixEncoding(str: string): string {
   }
 }
 
+function cleanSlug(slug: string): string {
+  if (!slug) return slug;
+  let s = slug.replace(/%[0-9a-fA-F]{2}/gi, '');
+  try { s = decodeURIComponent(s); } catch { /* ignore */ }
+  return s
+    .replace(/[^\x20-\x7E]/g, '')
+    .replace(/[^a-zA-Z0-9-]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .toLowerCase();
+}
+
 function fixProduct(product: any): any {
   if (!product) return product;
   return {
     ...product,
+    slug: cleanSlug(product.slug),
     name: fixEncoding(product.name),
     short_description: fixEncoding(product.short_description),
     description: fixEncoding(product.description),
