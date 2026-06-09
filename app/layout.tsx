@@ -38,7 +38,7 @@ export default function RootLayout({
       <body className="antialiased">
         <CartProvider>
           <Header />
-          <main className="min-h-screen pt-[60px]">
+          <main className="min-h-screen pt-[60px] md:pt-[80px]">
             {children}
           </main>
           <CartDrawer />
