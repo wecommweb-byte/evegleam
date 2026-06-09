@@ -91,7 +91,8 @@ export default function ProductCard({ product, index = 0 }: { product: Product, 
     </div>
   );
 
-  const cleanSlug = sanitizeSlug(product.slug || String(product.id));
+  // Prefix slug with product ID so we can always find it by ID (avoids WC slug encoding issues)
+  const cleanSlug = `${product.id}-${sanitizeSlug(product.slug || product.name || String(product.id))}`;
 
   if (isDesktop) {
     return (

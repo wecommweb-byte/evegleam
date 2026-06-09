@@ -23,17 +23,29 @@ export default function SingleProductClient({ slug }: { slug: string }) {
   useEffect(() => {
     async function load() {
       try {
-        // 1. Try exact slug match
-        let res = await fetch(`/api/products?slug=${encodeURIComponent(slug)}`);
-        let data = await res.json();
-        let p = Array.isArray(data) ? data[0] : null;
+        let p: any = null;
 
-        // 2. Fallback: search by name (convert slug hyphens → spaces)
+        // Extract numeric ID from slug format: "123-product-name" or just "123"
+        const idMatch = slug.match(/^(\d+)/);
+        if (idMatch) {
+          // Fetch directly by ID — always works regardless of slug encoding
+          const res = await fetch(`/api/products/${idMatch[1]}`);
+          if (res.ok) p = await res.json();
+        }
+
+        // Fallback 1: try slug lookup
         if (!p) {
-          const searchTerm = slug.replace(/-+/g, ' ').trim();
-          const fallback = await fetch(`/api/products?search=${encodeURIComponent(searchTerm)}&per_page=5`);
-          const fallbackData = await fallback.json();
-          p = Array.isArray(fallbackData) ? fallbackData[0] : null;
+          const res = await fetch(`/api/products?slug=${encodeURIComponent(slug)}`);
+          const data = await res.json();
+          p = Array.isArray(data) ? data[0] : null;
+        }
+
+        // Fallback 2: search by name
+        if (!p) {
+          const searchTerm = slug.replace(/^\d+-/, '').replace(/-+/g, ' ').trim();
+          const res = await fetch(`/api/products?search=${encodeURIComponent(searchTerm)}&per_page=5`);
+          const data = await res.json();
+          p = Array.isArray(data) ? data[0] : null;
         }
 
         if (!p) { setLoading(false); return; }
