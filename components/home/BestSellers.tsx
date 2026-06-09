@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { getProducts } from '@/lib/woocommerce';
 import ProductCard from '@/components/shop/ProductCard';
 import { Product } from '@/lib/types';
 import Link from 'next/link';
@@ -15,16 +14,17 @@ export default function BestSellers() {
   useEffect(() => {
     async function load() {
       try {
-        // Fetch all at once — featured flag + recent products
-        const [fData, recent] = await Promise.all([
-          getProducts({ featured: true, per_page: 8 }),
-          getProducts({ per_page: 8, orderby: 'date', order: 'desc' }),
+        // Fetch via server routes to avoid CORS on Vercel
+        const [fRes, recentRes] = await Promise.all([
+          fetch('/api/products?featured=true&per_page=8'),
+          fetch('/api/products?per_page=8&orderby=date&order=desc'),
         ]);
+        const [fData, recent] = await Promise.all([fRes.json(), recentRes.json()]);
 
-        // Use featured if available, else fall back to most recent
         const mostLoved: Product[] = fData?.length ? fData : recent;
-        // Best sellers: next 4 products after the first 8, or last 4 of recent
-        const bsData: Product[] = await getProducts({ per_page: 4, offset: 8, orderby: 'date', order: 'desc' });
+
+        const bsRes = await fetch('/api/products?per_page=4&offset=8&orderby=date&order=desc');
+        const bsData = await bsRes.json();
         const bestSellersData: Product[] = bsData?.length ? bsData : (recent?.slice(4, 8) ?? []);
 
         if (!mostLoved?.length && !bestSellersData?.length) {

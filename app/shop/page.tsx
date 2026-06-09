@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { getProducts, getCategories } from '@/lib/woocommerce';
 import ProductCard from '@/components/shop/ProductCard';
 import { Product, Category } from '@/lib/types';
 import { motion } from 'framer-motion';
@@ -21,98 +20,68 @@ function ShopContent() {
   );
   const [sortOption, setSortOption] = useState<string>('Latest');
 
-  // Sync URL category param when it changes (e.g. navigating from homepage)
   useEffect(() => {
     const cat = searchParams.get('category');
     setSelectedCategory(cat ? parseInt(cat) : null);
   }, [searchParams]);
 
-  // Load Categories once
+  // Load categories via server route
   useEffect(() => {
-    async function loadCats() {
-      try {
-        const cData = await getCategories();
-        setCategories(cData ?? []);
-      } catch (e) {
-        console.warn('Failed to fetch categories:', e);
-      }
-    }
-    loadCats();
+    fetch('/api/categories')
+      .then(r => r.json())
+      .then(data => setCategories(Array.isArray(data) ? data : []))
+      .catch(() => setCategories([]));
   }, []);
 
-  // Fetch products when category, sort, or initial load happens
-  useEffect(() => {
-    async function fetchProducts() {
-      setLoading(true);
-      try {
-        const params: any = { per_page: 12, page: 1 };
-        if (selectedCategory) params.category = selectedCategory;
-        
-        if (sortOption === 'Price: Low to High') {
-          params.orderby = 'price';
-          params.order = 'asc';
-        } else if (sortOption === 'Price: High to Low') {
-          params.orderby = 'price';
-          params.order = 'desc';
-        } else if (sortOption === 'Most Popular') {
-          params.orderby = 'popularity';
-        } else {
-          params.orderby = 'date';
-          params.order = 'desc';
-        }
+  // Build query string helper
+  function buildQuery(p: number, category: number | null, sort: string) {
+    const params = new URLSearchParams();
+    params.set('per_page', '12');
+    params.set('page', String(p));
+    if (category) params.set('category', String(category));
+    if (sort === 'Price: Low to High') { params.set('orderby', 'price'); params.set('order', 'asc'); }
+    else if (sort === 'Price: High to Low') { params.set('orderby', 'price'); params.set('order', 'desc'); }
+    else if (sort === 'Most Popular') { params.set('orderby', 'popularity'); }
+    else { params.set('orderby', 'date'); params.set('order', 'desc'); }
+    return params.toString();
+  }
 
-        const pData = await getProducts(params);
-        
-        setProducts(pData ?? []);
-        setHasMore((pData?.length ?? 0) === 12);
+  // Fetch products via server route
+  useEffect(() => {
+    setLoading(true);
+    fetch(`/api/products?${buildQuery(1, selectedCategory, sortOption)}`)
+      .then(r => r.json())
+      .then(data => {
+        const list = Array.isArray(data) ? data : [];
+        setProducts(list);
+        setHasMore(list.length === 12);
         setPage(1);
-      } catch (e) {
-        console.warn('Shop fetch error:', e);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchProducts();
+      })
+      .catch(() => setProducts([]))
+      .finally(() => setLoading(false));
   }, [selectedCategory, sortOption]);
 
   const loadMore = async () => {
     setLoadingMore(true);
-    try {
-      const nextPage = page + 1;
-      const params: any = { per_page: 12, page: nextPage };
-      if (selectedCategory) params.category = selectedCategory;
-      
-      if (sortOption === 'Price: Low to High') {
-        params.orderby = 'price';
-        params.order = 'asc';
-      } else if (sortOption === 'Price: High to Low') {
-        params.orderby = 'price';
-        params.order = 'desc';
-      } else if (sortOption === 'Most Popular') {
-        params.orderby = 'popularity';
-      } else {
-        params.orderby = 'date';
-        params.order = 'desc';
-      }
-
-      const moreProducts = await getProducts(params);
-      if (moreProducts.length === 0) {
-        setHasMore(false);
-      } else {
-        setProducts(prev => [...prev, ...moreProducts]);
-        setPage(nextPage);
-        setHasMore(moreProducts.length === 12);
-      }
-    } catch (e) {
-      console.warn('Load more error:', e);
-    } finally {
-      setLoadingMore(false);
-    }
+    const nextPage = page + 1;
+    fetch(`/api/products?${buildQuery(nextPage, selectedCategory, sortOption)}`)
+      .then(r => r.json())
+      .then(data => {
+        const list = Array.isArray(data) ? data : [];
+        if (list.length === 0) {
+          setHasMore(false);
+        } else {
+          setProducts(prev => [...prev, ...list]);
+          setPage(nextPage);
+          setHasMore(list.length === 12);
+        }
+      })
+      .catch(() => setHasMore(false))
+      .finally(() => setLoadingMore(false));
   };
 
   return (
     <div className="bg-bg min-h-screen">
-      {/* Hero Bar */}
       <div className="bg-blush bg-texture-1 py-16 text-center border-b border-blush-deep">
         <h1 className="font-heading italic text-[clamp(2.5rem,5vw,4rem)] text-dark mb-4">Shop All</h1>
         <p className="text-gray-500 font-body">Discover our complete collection of premium accessories</p>
@@ -122,7 +91,7 @@ function ShopContent() {
         {/* Filter Bar */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
           <div className="flex flex-wrap gap-3 justify-center">
-            <button 
+            <button
               onClick={() => setSelectedCategory(null)}
               className={`px-6 py-2 rounded-full font-medium text-sm transition-colors ${selectedCategory === null ? 'bg-brand-pink text-brand-dark' : 'border border-brand-gold text-brand-gold hover:bg-brand-gold hover:text-brand-dark'}`}
             >
@@ -131,17 +100,17 @@ function ShopContent() {
             {categories
               .filter(c => !['Uncategorized'].includes(c.name) && c.count > 0)
               .map(c => (
-              <button
-                key={c.id}
-                onClick={() => setSelectedCategory(c.id)}
-                className={`px-6 py-2 rounded-full font-medium text-sm transition-colors ${selectedCategory === c.id ? 'bg-brand-pink text-brand-dark' : 'border border-brand-gold text-brand-gold hover:bg-brand-gold hover:text-brand-dark'}`}
-              >
-                {c.name}
-              </button>
-            ))}
+                <button
+                  key={c.id}
+                  onClick={() => setSelectedCategory(c.id)}
+                  className={`px-6 py-2 rounded-full font-medium text-sm transition-colors ${selectedCategory === c.id ? 'bg-brand-pink text-brand-dark' : 'border border-brand-gold text-brand-gold hover:bg-brand-gold hover:text-brand-dark'}`}
+                >
+                  {c.name}
+                </button>
+              ))}
           </div>
-          
-          <select 
+
+          <select
             value={sortOption}
             onChange={(e) => setSortOption(e.target.value)}
             className="px-4 py-2 bg-transparent border border-gray-300 rounded-lg text-sm text-gray-700 focus:outline-none focus:border-gold"
@@ -172,7 +141,7 @@ function ShopContent() {
                 <p>No products found in this category.</p>
               </div>
             ) : (
-              <motion.div 
+              <motion.div
                 className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8"
                 initial="hidden"
                 animate="visible"

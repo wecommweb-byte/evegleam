@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Minus, Plus, ShoppingBag, Heart, ShieldCheck, Truck, RefreshCcw } from 'lucide-react';
-import { getProductBySlug, getProducts } from '@/lib/woocommerce';
+// Products fetched via /api/products to avoid CORS on Vercel
 import { useCart } from '@/context/CartContext';
 import { Product } from '@/lib/types';
 import Link from 'next/link';
@@ -23,14 +23,18 @@ export default function SingleProductClient({ slug }: { slug: string }) {
   useEffect(() => {
     async function load() {
       try {
-        const p = await getProductBySlug(slug);
+        // Fetch via server route to avoid CORS on Vercel
+        const res = await fetch(`/api/products?slug=${encodeURIComponent(slug)}`);
+        const data = await res.json();
+        const p = Array.isArray(data) ? data[0] : null;
         if (!p) { setLoading(false); return; }
 
         setProduct(p);
         setActiveImage(p.images?.[0]?.src || '');
 
-        const rData = await getProducts({ per_page: 4 });
-        setRelated(rData ?? []);
+        const relRes = await fetch(`/api/products?per_page=4`);
+        const relData = await relRes.json();
+        setRelated(Array.isArray(relData) ? relData.filter((r: any) => r.id !== p.id).slice(0, 4) : []);
       } catch (e) {
         console.error(e);
       } finally {

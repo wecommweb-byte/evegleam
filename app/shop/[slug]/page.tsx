@@ -1,25 +1,7 @@
-import { getProducts } from '@/lib/woocommerce';
 import SingleProductClient from './SingleProductClient';
 
-export async function generateStaticParams() {
-  try {
-    // Fetch up to 100 products to statically generate their pages
-    const products = await getProducts({ per_page: 100 });
-    if (!products || products.length === 0) {
-      // Must return at least one valid object
-      return [{ slug: 'fallback' }];
-    }
-    return products.map((p: any) => ({
-      slug: (p.slug || p.id.toString())
-        .replace(/[^\x00-\x7F]/g, '')  // strip non-ASCII (em-dashes etc.)
-        .replace(/-+/g, '-')            // collapse multiple hyphens
-        .replace(/^-|-$/g, ''),         // trim leading/trailing hyphens
-    }));
-  } catch (e) {
-    console.error('Failed to generate static params:', e);
-    return [{ slug: 'fallback' }];
-  }
-}
+// Allow any slug to be rendered dynamically (not just pre-built ones)
+export const dynamic = 'force-dynamic';
 
 export default function SingleProductPage({ params }: { params: { slug: string } }) {
   return <SingleProductClient slug={params.slug} />;
