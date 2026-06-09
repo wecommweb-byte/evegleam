@@ -9,7 +9,7 @@ export default function HeroSection() {
   const isDesktop = useIsDesktop();
 
   return (
-    <section className="relative w-full h-[100vh] flex items-center justify-center overflow-hidden bg-dark -mt-[60px]">
+    <section className="relative w-full h-[100vh] flex items-center justify-center overflow-hidden bg-dark -mt-[60px] md:-mt-[80px]">
       {/* Background Video */}
       <div className="absolute inset-0 z-0 bg-dark">
         <video
