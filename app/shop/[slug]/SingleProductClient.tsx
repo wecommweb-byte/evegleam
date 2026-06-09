@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Minus, Plus, ShoppingBag, Heart, ShieldCheck, Truck, RefreshCcw } from 'lucide-react';
-// Products fetched via /api/products to avoid CORS on Vercel
+import { decodeMojibake } from '@/lib/utils';
 import { useCart } from '@/context/CartContext';
 import { Product } from '@/lib/types';
 import Link from 'next/link';
@@ -23,16 +23,33 @@ export default function SingleProductClient({ slug }: { slug: string }) {
   useEffect(() => {
     async function load() {
       try {
-        // Fetch via server route to avoid CORS on Vercel
-        const res = await fetch(`/api/products?slug=${encodeURIComponent(slug)}`);
-        const data = await res.json();
-        const p = Array.isArray(data) ? data[0] : null;
+        // 1. Try exact slug match
+        let res = await fetch(`/api/products?slug=${encodeURIComponent(slug)}`);
+        let data = await res.json();
+        let p = Array.isArray(data) ? data[0] : null;
+
+        // 2. Fallback: search by name (convert slug hyphens → spaces)
+        if (!p) {
+          const searchTerm = slug.replace(/-+/g, ' ').trim();
+          const fallback = await fetch(`/api/products?search=${encodeURIComponent(searchTerm)}&per_page=5`);
+          const fallbackData = await fallback.json();
+          p = Array.isArray(fallbackData) ? fallbackData[0] : null;
+        }
+
         if (!p) { setLoading(false); return; }
+
+        // Fix mojibake encoding in text fields
+        p = {
+          ...p,
+          name: decodeMojibake(p.name),
+          short_description: decodeMojibake(p.short_description),
+          description: decodeMojibake(p.description),
+        };
 
         setProduct(p);
         setActiveImage(p.images?.[0]?.src || '');
 
-        const relRes = await fetch(`/api/products?per_page=4`);
+        const relRes = await fetch(`/api/products?per_page=5`);
         const relData = await relRes.json();
         setRelated(Array.isArray(relData) ? relData.filter((r: any) => r.id !== p.id).slice(0, 4) : []);
       } catch (e) {

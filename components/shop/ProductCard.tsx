@@ -7,6 +7,7 @@ import { ArrowRight, Star } from 'lucide-react';
 import { useIsDesktop } from '@/hooks/useScrollAnimation';
 import { useCart } from '@/context/CartContext';
 import { Product } from '@/lib/types';
+import { sanitizeSlug } from '@/lib/utils';
 
 export default function ProductCard({ product, index = 0 }: { product: Product, index?: number }) {
   const isDesktop = useIsDesktop();
@@ -90,10 +91,7 @@ export default function ProductCard({ product, index = 0 }: { product: Product, 
     </div>
   );
 
-  const cleanSlug = (product.slug || String(product.id))
-    .replace(/[^\x00-\x7F]/g, '')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '');
+  const cleanSlug = sanitizeSlug(product.slug || String(product.id));
 
   if (isDesktop) {
     return (

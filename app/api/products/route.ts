@@ -26,6 +26,8 @@ export async function GET(request: NextRequest) {
   const search = searchParams.get('search') || '';
   const orderby = searchParams.get('orderby') || '';
   const order = searchParams.get('order') || '';
+  const offset = searchParams.get('offset') || '';
+  const featured = searchParams.get('featured') || '';
 
   const url = new URL(`${BASE}/wp-json/wc/v3/products`);
   url.searchParams.set('consumer_key', KEY!);
@@ -42,6 +44,8 @@ export async function GET(request: NextRequest) {
     if (search) url.searchParams.set('search', search);
     if (orderby) url.searchParams.set('orderby', orderby);
     if (order) url.searchParams.set('order', order);
+    if (offset) url.searchParams.set('offset', offset);
+    if (featured) url.searchParams.set('featured', featured);
   }
 
   try {
