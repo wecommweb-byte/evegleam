@@ -17,6 +17,39 @@ async function wcFetch(url: string) {
   }
 }
 
+/**
+ * Fixes UTF-8 mojibake in WooCommerce strings.
+ * WooCommerce stores text like "Sage – Long" with wrong encoding where
+ * the en-dash bytes (E2 80 93) are treated as individual Latin-1 chars.
+ *
+ * In Node.js we can fix this by re-interpreting the chars as latin1 bytes
+ * and decoding as UTF-8.
+ */
+function fixEncoding(str: string): string {
+  if (!str || typeof str !== 'string') return str;
+  try {
+    // Re-interpret the JS string as if each code point is a raw byte (latin1)
+    // then decode as UTF-8 — this reverses the mojibake
+    const fixed = Buffer.from(str, 'latin1').toString('utf8');
+    // Only use the fixed version if it looks better (fewer replacement chars)
+    const replacements = (fixed.match(/�/g) || []).length;
+    if (replacements < 3) return fixed;
+    return str;
+  } catch {
+    return str;
+  }
+}
+
+function fixProduct(product: any): any {
+  if (!product) return product;
+  return {
+    ...product,
+    name: fixEncoding(product.name),
+    short_description: fixEncoding(product.short_description),
+    description: fixEncoding(product.description),
+  };
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const slug = searchParams.get('slug') || '';
@@ -35,7 +68,6 @@ export async function GET(request: NextRequest) {
   url.searchParams.set('status', 'publish');
 
   if (slug) {
-    // Single product lookup by slug
     url.searchParams.set('slug', slug);
   } else {
     url.searchParams.set('page', page);
@@ -52,7 +84,9 @@ export async function GET(request: NextRequest) {
     const res = await wcFetch(url.toString());
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    return NextResponse.json(data);
+    // Fix encoding on all returned products
+    const fixed = Array.isArray(data) ? data.map(fixProduct) : fixProduct(data);
+    return NextResponse.json(fixed);
   } catch (error) {
     console.warn('API /products error:', error);
     return NextResponse.json([], { status: 500 });

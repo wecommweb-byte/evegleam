@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Minus, Plus, ShoppingBag, Heart, ShieldCheck, Truck, RefreshCcw } from 'lucide-react';
-import { decodeMojibake } from '@/lib/utils';
+// Encoding is fixed server-side in /api/products route
 import { useCart } from '@/context/CartContext';
 import { Product } from '@/lib/types';
 import Link from 'next/link';
@@ -49,14 +49,6 @@ export default function SingleProductClient({ slug }: { slug: string }) {
         }
 
         if (!p) { setLoading(false); return; }
-
-        // Fix mojibake encoding in text fields
-        p = {
-          ...p,
-          name: decodeMojibake(p.name),
-          short_description: decodeMojibake(p.short_description),
-          description: decodeMojibake(p.description),
-        };
 
         setProduct(p);
         setActiveImage(p.images?.[0]?.src || '');
