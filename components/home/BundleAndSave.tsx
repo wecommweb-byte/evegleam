@@ -1,11 +1,12 @@
 'use client';
 import { motion } from 'framer-motion';
 import { useIsDesktop } from '@/hooks/useScrollAnimation';
+import Link from 'next/link';
 
 const bundles = [
-  { id: 1, title: "The Essentials Set", discount: "20% OFF", desc: "Gleam with quality and style", popular: false },
-  { id: 2, title: "The Bridal Bundle", discount: "20% OFF", desc: "Perfect for your special day", popular: false },
-  { id: 3, title: "The Gift Box", discount: "30% OFF", desc: "A gift she'll never forget", popular: true },
+  { id: 1, title: "Basic Bundle", price: "Rs. 2,999", desc: "Choose any 4 nail sets from our full collection", popular: false },
+  { id: 2, title: "Bridal Bundle", price: "Rs. 4,999", desc: "Perfect for brides and special occasions", popular: false },
+  { id: 3, title: "Gift Bundle", price: "Rs. 5,499", desc: "Choose 4 sets + get 1 FREE random set as a gift 🎁", popular: true },
 ];
 
 export default function BundleAndSave() {
@@ -16,9 +17,10 @@ export default function BundleAndSave() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="font-heading italic text-[clamp(2.5rem,5vw,4rem)] text-dark">Bundle & Save</h2>
+          <p className="text-gray-500 font-body mt-4">Pick any 4 nail sets and save big</p>
         </div>
 
-        <motion.div 
+        <motion.div
           className="grid grid-cols-1 md:grid-cols-3 gap-8"
           initial="hidden"
           whileInView="visible"
@@ -41,17 +43,27 @@ export default function BundleAndSave() {
                   MOST POPULAR
                 </div>
               )}
-              
-              <h3 className="font-heading italic text-2xl text-dark mb-4 mt-4">{bundle.title}</h3>
-              <div className="font-heading font-bold text-4xl text-brand-dark mb-4">{bundle.discount}</div>
-              <p className="text-gray-500 font-body mb-8 flex-1">{bundle.desc}</p>
-              
-              <button className="w-full bg-brand-pink text-brand-dark rounded-full py-3 font-medium hover:bg-brand-gold hover:text-white transition-colors duration-300">
-                Buy Now
-              </button>
+
+              <h3 className="font-heading italic text-2xl text-dark mb-3 mt-4">{bundle.title}</h3>
+              <div className="font-heading font-bold text-3xl text-brand-dark mb-3">{bundle.price}</div>
+              <p className="text-gray-500 font-body mb-8 flex-1 text-sm">{bundle.desc}</p>
+
+              <Link href="/bundles" className="w-full">
+                <button className="w-full bg-brand-pink text-brand-dark rounded-full py-3 font-medium hover:bg-brand-gold hover:text-white transition-colors duration-300">
+                  Build My Bundle
+                </button>
+              </Link>
             </motion.div>
           ))}
         </motion.div>
+
+        <div className="text-center mt-12">
+          <Link href="/bundles">
+            <button className="px-10 py-3 rounded-full border-2 border-brand-gold text-brand-gold font-medium hover:bg-brand-gold hover:text-white transition-colors duration-300">
+              View All Bundles
+            </button>
+          </Link>
+        </div>
       </div>
     </section>
   );

@@ -299,7 +299,6 @@ function BundlesContent() {
                         </div>
                         <div className="p-2 bg-white">
                           <p className="font-body text-xs text-dark font-medium leading-tight line-clamp-2">{product.name}</p>
-                          <p className="text-brand-gold text-xs font-semibold mt-1">Rs. {Number(product.price).toLocaleString()}</p>
                         </div>
                       </motion.div>
                     );
