@@ -31,15 +31,6 @@ export default function HeroSection() {
 
       {/* Content */}
       <div className="relative z-30 text-center px-4 max-w-4xl mx-auto flex flex-col items-center">
-        <motion.p
-          initial={isDesktop ? { opacity: 0, y: 20 } : false}
-          animate={isDesktop ? { opacity: 1, y: 0 } : false}
-          transition={{ delay: 0.2, duration: 0.7 }}
-          className="text-brand-gold tracking-[0.2em] text-xs md:text-sm font-medium mb-6 uppercase"
-        >
-          ✦ Premium Press-On Nails & Jewelry
-        </motion.p>
-        
         <motion.h1
           initial={isDesktop ? { opacity: 0, y: 30 } : false}
           animate={isDesktop ? { opacity: 1, y: 0 } : false}
@@ -55,7 +46,7 @@ export default function HeroSection() {
           transition={{ delay: 0.8, duration: 0.7 }}
           className="text-white/90 text-lg md:text-xl font-light mb-10 max-w-lg mx-auto"
         >
-          Premium accessories for the modern woman
+          Premium Press-On Nails for All Age Women
         </motion.p>
 
         <motion.div
