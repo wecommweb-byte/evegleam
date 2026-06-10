@@ -65,16 +65,36 @@ export default function SingleProductClient({ slug }: { slug: string }) {
     load();
   }, [slug]);
 
+  useEffect(() => {
+    if (product && typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'ViewContent', {
+        content_ids: [String(product.id)],
+        content_type: 'product',
+        value: parseInt(product.price || '0'),
+        currency: 'PKR',
+      });
+    }
+  }, [product?.id]);
+
   const handleAdd = () => {
     if (!product) return;
+    const itemPrice = parseInt(product.price || '2500');
     addToCart({
       id: product.id,
       slug: product.slug,
       name: product.name,
-      price: parseInt(product.price || '2500'),
+      price: itemPrice,
       quantity,
       image: activeImage,
     });
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'AddToCart', {
+        content_ids: [String(product.id)],
+        content_type: 'product',
+        value: itemPrice,
+        currency: 'PKR',
+      });
+    }
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };

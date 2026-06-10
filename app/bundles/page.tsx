@@ -104,6 +104,14 @@ function BundlesContent() {
       image: selectedNails[0]?.images?.[0]?.src || '',
       variation,
     });
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'AddToCart', {
+        content_ids: [String(selectedBundle.id)],
+        content_type: 'product',
+        value: selectedBundle.price,
+        currency: 'PKR',
+      });
+    }
     setAddedToCart(true);
     setTimeout(() => {
       setAddedToCart(false);

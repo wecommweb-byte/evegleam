@@ -111,6 +111,14 @@ export default function CheckoutPage() {
 
       if (data.id) {
         setOrderId(data.id);
+        if (typeof window !== 'undefined' && (window as any).fbq) {
+          (window as any).fbq('track', 'Purchase', {
+            content_ids: items.map(item => String(item.id)),
+            content_type: 'product',
+            value: total,
+            currency: 'PKR',
+          });
+        }
         clearCart();
       } else {
         throw new Error('Order was not created. Please try again.');
