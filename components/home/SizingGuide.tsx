@@ -39,10 +39,9 @@ export default function SizingGuide() {
           <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-soft-lg group">
             <div ref={imageRef} className="absolute inset-0 w-full h-full">
               <Image
-                src="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=800"
+                src="/sizing-guide.webp"
                 alt="Perfect Fit Guide"
                 fill
-                unoptimized
                 className="object-cover"
               />
             </div>
