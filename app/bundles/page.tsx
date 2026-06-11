@@ -11,6 +11,7 @@ const BUNDLES = [
     id: 1000074,
     slug: 'basic-bundle',
     key: 'basic',
+    eligibleTag: 'bundle-1',
     name: 'Basic Bundle',
     price: 2999,
     tagline: 'Perfect Everyday Glam',
@@ -24,6 +25,7 @@ const BUNDLES = [
     id: 1000075,
     slug: 'bridal-bundle',
     key: 'bridal',
+    eligibleTag: 'bundle-2',
     name: 'Bridal Bundle',
     price: 4999,
     tagline: 'For Your Special Day',
@@ -37,6 +39,7 @@ const BUNDLES = [
     id: 1000076,
     slug: 'gift-bundle',
     key: 'gift',
+    eligibleTag: 'bundle-2',
     name: 'Gift Bundle',
     price: 5499,
     tagline: 'The Ultimate Gift',
@@ -67,10 +70,11 @@ function BundlesContent() {
           fetch(`/api/products?page=${page}&per_page=50`).then(r => r.json())
         ));
         const all: any[] = pages.flat();
-        // Filter out the bundle products themselves
+        // Only show products eligible for the selected bundle (tagged bundle-1 / bundle-2)
         const filtered = all.filter((p: any) =>
           !['basic-bundle', 'bridal-bundle', 'gift-bundle'].includes(p.slug) &&
-          p.images?.length > 0
+          p.images?.length > 0 &&
+          p.tags?.some((t: any) => t.slug === selectedBundle.eligibleTag)
         );
         setProducts(filtered);
       } catch {
