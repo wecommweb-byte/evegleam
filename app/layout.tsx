@@ -1,5 +1,6 @@
 import { Cormorant_Garamond, Inter } from 'next/font/google';
 import Script from 'next/script';
+import { Analytics } from '@vercel/analytics/next';
 import { CartProvider } from '@/context/CartContext';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -57,6 +58,7 @@ export default function RootLayout({
             alt=""
           />
         </noscript>
+        <Analytics />
         <CartProvider>
           <Header />
           <main className="min-h-screen pt-[60px] md:pt-[80px]">
