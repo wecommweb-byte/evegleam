@@ -3,10 +3,16 @@ import { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { CheckCircle, Copy, Check } from 'lucide-react';
+import { CheckCircle, Copy, Check, Truck, Gift } from 'lucide-react';
+
+const FLAT_RATE = 199;
+const FREE_SHIPPING_MIN = 3000;
 
 export default function CheckoutPage() {
   const { items, total, clearCart } = useCart();
+  const isFreeShipping = total >= FREE_SHIPPING_MIN;
+  const shippingCost = isFreeShipping ? 0 : FLAT_RATE;
+  const grandTotal = total + shippingCost;
   const [loading, setLoading] = useState(false);
   const [orderId, setOrderId] = useState<number | null>(null);
   const [error, setError] = useState('');
@@ -63,6 +69,13 @@ export default function CheckoutPage() {
         payment_method_title: 'Cash on Delivery',
         set_paid: false,
         status: 'processing',
+        shipping_lines: [
+          {
+            method_id: isFreeShipping ? 'free_shipping' : 'flat_rate',
+            method_title: isFreeShipping ? 'Free shipping' : 'Flat rate',
+            total: String(shippingCost),
+          },
+        ],
         billing: {
           first_name: formData.firstName,
           last_name: formData.lastName,
@@ -115,7 +128,7 @@ export default function CheckoutPage() {
           (window as any).fbq('track', 'Purchase', {
             content_ids: items.map(item => String(item.id)),
             content_type: 'product',
-            value: total,
+            value: grandTotal,
             currency: 'PKR',
           });
         }
@@ -313,13 +326,26 @@ export default function CheckoutPage() {
                     <span>Subtotal</span>
                     <span>₨ {total.toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between text-sm text-gray-500">
-                    <span>Shipping</span>
-                    <span>Calculated at next step</span>
+                  <div className="flex justify-between text-sm items-center">
+                    <span className="flex items-center gap-1 text-gray-500">
+                      <Truck size={14} /> Shipping
+                    </span>
+                    {isFreeShipping ? (
+                      <span className="flex items-center gap-1 text-green-600 font-medium text-xs">
+                        <Gift size={13} /> Free Shipping
+                      </span>
+                    ) : (
+                      <span className="text-gray-600">₨ {FLAT_RATE.toLocaleString()}</span>
+                    )}
                   </div>
+                  {!isFreeShipping && (
+                    <p className="text-xs text-brand-gold">
+                      Add ₨ {(FREE_SHIPPING_MIN - total).toLocaleString()} more for free shipping!
+                    </p>
+                  )}
                   <div className="border-t border-blush pt-3 mt-3 flex justify-between text-lg font-medium text-dark">
                     <span>Total</span>
-                    <span>₨ {total.toLocaleString()}</span>
+                    <span>₨ {grandTotal.toLocaleString()}</span>
                   </div>
                 </div>
               </div>
