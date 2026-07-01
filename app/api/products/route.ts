@@ -8,7 +8,7 @@ async function wcFetch(url: string) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 20000);
   try {
-    const res = await fetch(url, { signal: controller.signal, cache: 'no-store' });
+    const res = await fetch(url, { signal: controller.signal, next: { revalidate: 300 } });
     clearTimeout(timer);
     return res;
   } catch (err) {

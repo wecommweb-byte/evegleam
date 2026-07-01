@@ -50,7 +50,7 @@ async function fetchAllProducts() {
     url.searchParams.set('per_page', '100');
     url.searchParams.set('page', String(page));
 
-    const res = await fetch(url.toString(), { cache: 'no-store' });
+    const res = await fetch(url.toString(), { next: { revalidate: 3600 } });
     if (!res.ok) break;
     const data = await res.json();
     if (!Array.isArray(data) || data.length === 0) break;
