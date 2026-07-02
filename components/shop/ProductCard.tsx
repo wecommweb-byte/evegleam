@@ -15,6 +15,8 @@ export default function ProductCard({ product, index = 0 }: { product: Product, 
   const [added, setAdded] = useState(false);
 
   const price = product.price ? parseInt(product.price) : 2500;
+  const regularPrice = product.regular_price ? parseInt(product.regular_price) : null;
+  const isOnSale = regularPrice && regularPrice > price;
   const imageSrc = product.images?.[0]?.src || 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=600';
 
   const handleAdd = (e: React.MouseEvent) => {
@@ -43,6 +45,11 @@ export default function ProductCard({ product, index = 0 }: { product: Product, 
           loading={index > 3 ? "lazy" : "eager"}
           className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
         />
+        {isOnSale && (
+          <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full z-10">
+            50% OFF
+          </div>
+        )}
         {/* Quick View Button (Desktop only) */}
         {isDesktop && (
           <div className="absolute inset-x-0 bottom-0 p-4 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out z-10">
@@ -63,7 +70,16 @@ export default function ProductCard({ product, index = 0 }: { product: Product, 
           </div>
           <span className="text-xs text-gray-500 font-medium">4.9</span>
         </div>
-        <div className="text-brand-dark font-heading text-[1.1rem] mb-4">₨ {price.toLocaleString()}</div>
+        <div className="mb-4">
+          {isOnSale ? (
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-brand-dark font-heading text-[1.1rem]">₨ {price.toLocaleString()}</span>
+              <span className="text-gray-400 line-through text-sm">₨ {regularPrice!.toLocaleString()}</span>
+            </div>
+          ) : (
+            <span className="text-brand-dark font-heading text-[1.1rem]">₨ {price.toLocaleString()}</span>
+          )}
+        </div>
         
         <div className="mt-auto">
           <button

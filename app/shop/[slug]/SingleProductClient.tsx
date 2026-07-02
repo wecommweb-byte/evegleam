@@ -121,6 +121,8 @@ export default function SingleProductClient({ slug }: { slug: string }) {
   if (!product) return <div className="min-h-screen bg-bg flex items-center justify-center">Product not found.</div>;
 
   const price = parseInt(product.price || '3500').toLocaleString();
+  const regularPrice = product.regular_price ? parseInt(product.regular_price) : null;
+  const isOnSale = regularPrice && regularPrice > parseInt(product.price || '0');
 
   return (
     <div className="bg-bg min-h-screen pb-24">
@@ -170,7 +172,17 @@ export default function SingleProductClient({ slug }: { slug: string }) {
           {/* Product Info */}
           <div className="lg:w-[45%] flex flex-col pt-4 lg:pt-8">
             <h1 className="font-heading italic text-4xl lg:text-[2.5rem] text-dark mb-4">{product.name}</h1>
-            <div className="font-heading text-3xl text-brand-dark mb-6">₨ {price}</div>
+            <div className="mb-6">
+              {isOnSale ? (
+                <div className="flex items-center gap-3 flex-wrap">
+                  <span className="font-heading text-3xl text-brand-dark">₨ {price}</span>
+                  <span className="text-gray-400 line-through text-xl">₨ {regularPrice!.toLocaleString()}</span>
+                  <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">50% OFF</span>
+                </div>
+              ) : (
+                <span className="font-heading text-3xl text-brand-dark">₨ {price}</span>
+              )}
+            </div>
             
             <div className="text-gray-600 font-body leading-relaxed mb-8" dangerouslySetInnerHTML={{ __html: product.short_description || '<p>A stunning handcrafted press-on nail set featuring premium materials and a perfect fit.</p>' }} />
 
