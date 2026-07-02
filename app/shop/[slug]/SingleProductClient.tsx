@@ -99,7 +99,25 @@ export default function SingleProductClient({ slug }: { slug: string }) {
     setTimeout(() => setAdded(false), 2000);
   };
 
-  if (loading) return <div className="min-h-screen bg-bg flex items-center justify-center text-gold">Loading...</div>;
+  if (loading) return (
+    <div className="bg-bg min-h-screen pb-24 animate-pulse">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="h-4 bg-gray-200 rounded w-48 mb-8" />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="aspect-square bg-blush rounded-3xl" />
+          <div className="space-y-4 pt-4">
+            <div className="h-6 bg-gray-200 rounded w-1/3" />
+            <div className="h-10 bg-gray-200 rounded w-2/3" />
+            <div className="h-8 bg-blush rounded w-1/4" />
+            <div className="h-4 bg-gray-100 rounded w-full mt-6" />
+            <div className="h-4 bg-gray-100 rounded w-5/6" />
+            <div className="h-4 bg-gray-100 rounded w-4/6" />
+            <div className="h-14 bg-blush-deep rounded-full w-full mt-8" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
   if (!product) return <div className="min-h-screen bg-bg flex items-center justify-center">Product not found.</div>;
 
   const price = parseInt(product.price || '3500').toLocaleString();

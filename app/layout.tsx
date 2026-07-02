@@ -1,10 +1,12 @@
 import { Cormorant_Garamond, Inter } from 'next/font/google';
 import Script from 'next/script';
+import { Suspense } from 'react';
 import { Analytics } from '@vercel/analytics/next';
 import { CartProvider } from '@/context/CartContext';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import CartDrawer from '@/components/layout/CartDrawer';
+import TopLoader from '@/components/layout/TopLoader';
 import './globals.css';
 
 const cormorant = Cormorant_Garamond({
@@ -59,6 +61,9 @@ export default function RootLayout({
           />
         </noscript>
         <Analytics />
+        <Suspense fallback={null}>
+          <TopLoader />
+        </Suspense>
         <CartProvider>
           <Header />
           <main className="min-h-screen pt-[60px] md:pt-[80px]">
