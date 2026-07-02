@@ -26,6 +26,9 @@ const inter = Inter({
 export const metadata = {
   title: 'Eve Gleam | Premium Press-On Nails & Jewelry',
   description: 'Premium accessories for the modern woman. Handcrafted press-on nails and luxury jewelry.',
+  verification: {
+    google: 'qqn8VFlgS4wI0xceVbIfKgps5NwWKbsNj65aORXLqf0',
+  },
   icons: {
     icon: [{ url: '/logo.png', type: 'image/png' }],
     apple: [{ url: '/logo.png', type: 'image/png' }],
