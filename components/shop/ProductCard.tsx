@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight, Star } from 'lucide-react';
+import { ArrowRight, Star, Gift } from 'lucide-react';
 import { useIsDesktop } from '@/hooks/useScrollAnimation';
 import { useCart } from '@/context/CartContext';
 import { Product } from '@/lib/types';
@@ -14,9 +14,11 @@ export default function ProductCard({ product, index = 0 }: { product: Product, 
   const { addToCart } = useCart();
   const [added, setAdded] = useState(false);
 
+  const BUNDLE_SLUGS = ['basic-bundle', 'bridal-bundle', 'gift-bundle'];
+  const isBundle = BUNDLE_SLUGS.includes(product.slug);
   const price = product.price ? parseInt(product.price) : 2500;
   const regularPrice = product.regular_price ? parseInt(product.regular_price) : null;
-  const isOnSale = regularPrice && regularPrice > price;
+  const isOnSale = !isBundle && regularPrice && regularPrice > price;
   const imageSrc = product.images?.[0]?.src || 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=600';
 
   const handleAdd = (e: React.MouseEvent) => {
@@ -45,6 +47,11 @@ export default function ProductCard({ product, index = 0 }: { product: Product, 
           loading={index > 3 ? "lazy" : "eager"}
           className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
         />
+        {isBundle && (
+          <div className="absolute top-2 left-2 bg-brand-gold text-white text-xs font-bold px-2 py-1 rounded-full z-10 flex items-center gap-1">
+            <Gift size={10} /> Bundle
+          </div>
+        )}
         {isOnSale && (
           <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full z-10">
             50% OFF
@@ -82,26 +89,32 @@ export default function ProductCard({ product, index = 0 }: { product: Product, 
         </div>
         
         <div className="mt-auto">
-          <button
-            onClick={handleAdd}
-            className={`w-full py-2.5 rounded-full border border-gold font-medium flex items-center justify-center transition-all duration-300 ${
-              added ? 'bg-brand-pink text-brand-dark' : 'text-brand-gold hover:bg-brand-gold hover:text-brand-dark'
-            }`}
-          >
-            {added ? (
-              <span>✓ Added!</span>
-            ) : (
-              <span className="flex items-center">
-                Add to Cart
-                <motion.span 
-                  className="ml-2 inline-block"
-                  variants={{ hover: { x: 4 } }}
-                >
-                  <ArrowRight size={16} />
-                </motion.span>
-              </span>
-            )}
-          </button>
+          {isBundle ? (
+            <div className="w-full py-2.5 rounded-full bg-brand-gold text-white font-medium flex items-center justify-center gap-2">
+              <Gift size={15} /> Build Your Bundle
+            </div>
+          ) : (
+            <button
+              onClick={handleAdd}
+              className={`w-full py-2.5 rounded-full border border-gold font-medium flex items-center justify-center transition-all duration-300 ${
+                added ? 'bg-brand-pink text-brand-dark' : 'text-brand-gold hover:bg-brand-gold hover:text-brand-dark'
+              }`}
+            >
+              {added ? (
+                <span>✓ Added!</span>
+              ) : (
+                <span className="flex items-center">
+                  Add to Cart
+                  <motion.span
+                    className="ml-2 inline-block"
+                    variants={{ hover: { x: 4 } }}
+                  >
+                    <ArrowRight size={16} />
+                  </motion.span>
+                </span>
+              )}
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -109,6 +122,7 @@ export default function ProductCard({ product, index = 0 }: { product: Product, 
 
   // Prefix slug with product ID so we can always find it by ID (avoids WC slug encoding issues)
   const cleanSlug = `${product.id}-${sanitizeSlug(product.slug || product.name || String(product.id))}`;
+  const href = isBundle ? '/bundles' : `/shop/${cleanSlug}`;
 
   if (isDesktop) {
     return (
@@ -120,7 +134,7 @@ export default function ProductCard({ product, index = 0 }: { product: Product, 
         whileHover={{ y: -4, transition: { type: 'spring', stiffness: 300, damping: 20 } }}
         className="h-full"
       >
-        <Link href={`/shop/${cleanSlug}`} className="block h-full">
+        <Link href={href} className="block h-full">
           {cardContent}
         </Link>
       </motion.div>
@@ -128,7 +142,7 @@ export default function ProductCard({ product, index = 0 }: { product: Product, 
   }
 
   return (
-    <Link href={`/shop/${cleanSlug}`} className="block h-full">
+    <Link href={href} className="block h-full">
       {cardContent}
     </Link>
   );
