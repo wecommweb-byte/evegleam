@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Instagram, Facebook, Twitter, Youtube } from 'lucide-react';
+import { Instagram, Facebook } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Footer() {
@@ -24,10 +24,16 @@ export default function Footer() {
               Premium accessories for the modern woman. Handcrafted press-on nails and luxury jewelry.
             </p>
             <div className="flex space-x-4">
-              {[Instagram, Facebook, Twitter, Youtube].map((Icon, i) => (
+              {[
+                { Icon: Instagram, href: 'https://www.instagram.com/evegleam_nails?igsh=MTJocndwbXhvaXV0bg%3D%3D&utm_source=qr', label: 'Instagram' },
+                { Icon: Facebook, href: 'https://www.facebook.com/share/191e6opxBv/?mibextid=wwXIfr', label: 'Facebook' },
+              ].map(({ Icon, href, label }) => (
                 <motion.a
-                  key={i}
-                  href="#"
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
                   whileHover={{ scale: 1.2, color: '#C19860' }}
                   className="w-10 h-10 rounded-full bg-brand-pink-light flex items-center justify-center text-brand-dark transition-colors"
                 >
