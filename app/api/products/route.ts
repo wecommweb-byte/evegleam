@@ -20,11 +20,11 @@ function fixProduct(product: any): any {
   };
 }
 
+const AUTH_HEADER = 'Basic ' + Buffer.from(`${KEY}:${SECRET}`).toString('base64');
+
 async function wooFallback(searchParams: URLSearchParams): Promise<any[]> {
   const slug = searchParams.get('slug') || '';
   const url = new URL(`${BASE}/wp-json/wc/v3/products`);
-  url.searchParams.set('consumer_key', KEY!);
-  url.searchParams.set('consumer_secret', SECRET!);
   url.searchParams.set('status', 'publish');
   if (slug) {
     url.searchParams.set('slug', slug);
@@ -37,7 +37,7 @@ async function wooFallback(searchParams: URLSearchParams): Promise<any[]> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 20000);
   try {
-    const res = await fetch(url.toString(), { signal: controller.signal, cache: 'no-store' });
+    const res = await fetch(url.toString(), { signal: controller.signal, cache: 'no-store', headers: { Authorization: AUTH_HEADER } });
     clearTimeout(timer);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();

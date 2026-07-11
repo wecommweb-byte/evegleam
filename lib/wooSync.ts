@@ -119,24 +119,19 @@ export function rowToWooShape(row: any): any {
 }
 
 // ---- WooCommerce fetch helpers ----
-// Hostinger's LiteSpeed cache treats authenticated REST GETs (consumer_key in the query
-// string) as publicly cacheable, which serves STALE data to the sync. We force a bypass
-// with a unique cache-buster param + no-cache headers on every sync fetch.
-const NO_CACHE_HEADERS = { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' };
-function bust(): string {
-  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-}
+// Hostinger's LiteSpeed cache caches authenticated REST GETs when the credentials are in
+// the query string (consumer_key/secret) — serving STALE data to the sync for ~23 min.
+// Sending credentials via the Authorization header instead makes LiteSpeed treat the
+// request as logged-in and bypass its cache entirely (verified: x-litespeed-cache: miss).
+const AUTH_HEADER = 'Basic ' + Buffer.from(`${KEY}:${SECRET}`).toString('base64');
+const FETCH_HEADERS = { Authorization: AUTH_HEADER, 'Cache-Control': 'no-cache' };
 
 function wcUrl(path: string): URL {
-  const url = new URL(`${BASE}/wp-json/wc/v3/${path}`);
-  url.searchParams.set('consumer_key', KEY!);
-  url.searchParams.set('consumer_secret', SECRET!);
-  url.searchParams.set('_nc', bust());
-  return url;
+  return new URL(`${BASE}/wp-json/wc/v3/${path}`);
 }
 
 async function fetchWooProduct(id: number | string): Promise<any | null> {
-  const res = await fetch(wcUrl(`products/${id}`).toString(), { cache: 'no-store', headers: NO_CACHE_HEADERS });
+  const res = await fetch(wcUrl(`products/${id}`).toString(), { cache: 'no-store', headers: FETCH_HEADERS });
   if (!res.ok) return null;
   return res.json();
 }
@@ -148,7 +143,7 @@ async function fetchAllWooProducts(): Promise<any[]> {
     url.searchParams.set('status', 'publish');
     url.searchParams.set('per_page', '100');
     url.searchParams.set('page', String(page));
-    const res = await fetch(url.toString(), { cache: 'no-store', headers: NO_CACHE_HEADERS });
+    const res = await fetch(url.toString(), { cache: 'no-store', headers: FETCH_HEADERS });
     if (!res.ok) throw new Error(`Woo fetch page ${page} failed: ${res.status}`);
     const data = await res.json();
     if (!Array.isArray(data) || data.length === 0) break;
