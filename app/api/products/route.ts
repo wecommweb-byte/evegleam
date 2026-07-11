@@ -85,7 +85,11 @@ export async function GET(request: NextRequest) {
 
       const { data, error } = await query;
       if (error) throw error;
-      return NextResponse.json((data || []).map(rowToWooShape));
+      // Non-empty → serve from Supabase. Empty → fall through to live Woo, which safely
+      // covers the not-yet-seeded table and any brand-new unsynced product.
+      if (data && data.length > 0) {
+        return NextResponse.json(data.map(rowToWooShape));
+      }
     } catch (error) {
       console.warn('Supabase /products read failed, falling back to Woo:', error);
     }
