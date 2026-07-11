@@ -119,15 +119,24 @@ export function rowToWooShape(row: any): any {
 }
 
 // ---- WooCommerce fetch helpers ----
+// Hostinger's LiteSpeed cache treats authenticated REST GETs (consumer_key in the query
+// string) as publicly cacheable, which serves STALE data to the sync. We force a bypass
+// with a unique cache-buster param + no-cache headers on every sync fetch.
+const NO_CACHE_HEADERS = { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' };
+function bust(): string {
+  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
 function wcUrl(path: string): URL {
   const url = new URL(`${BASE}/wp-json/wc/v3/${path}`);
   url.searchParams.set('consumer_key', KEY!);
   url.searchParams.set('consumer_secret', SECRET!);
+  url.searchParams.set('_nc', bust());
   return url;
 }
 
 async function fetchWooProduct(id: number | string): Promise<any | null> {
-  const res = await fetch(wcUrl(`products/${id}`).toString(), { cache: 'no-store' });
+  const res = await fetch(wcUrl(`products/${id}`).toString(), { cache: 'no-store', headers: NO_CACHE_HEADERS });
   if (!res.ok) return null;
   return res.json();
 }
@@ -139,7 +148,7 @@ async function fetchAllWooProducts(): Promise<any[]> {
     url.searchParams.set('status', 'publish');
     url.searchParams.set('per_page', '100');
     url.searchParams.set('page', String(page));
-    const res = await fetch(url.toString(), { cache: 'no-store' });
+    const res = await fetch(url.toString(), { cache: 'no-store', headers: NO_CACHE_HEADERS });
     if (!res.ok) throw new Error(`Woo fetch page ${page} failed: ${res.status}`);
     const data = await res.json();
     if (!Array.isArray(data) || data.length === 0) break;
