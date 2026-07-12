@@ -17,6 +17,12 @@ export function getSupabase(): SupabaseClient | null {
   if (client) return client;
   client = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
     auth: { persistSession: false, autoRefreshToken: false },
+    global: {
+      // Next.js patches global fetch and caches GET responses in its data cache — which
+      // would serve a stale mirror even on dynamic routes. Force every Supabase query to
+      // bypass that cache so reads always reflect the current row.
+      fetch: (input: any, init?: any) => fetch(input, { ...init, cache: 'no-store' }),
+    },
   });
   return client;
 }
