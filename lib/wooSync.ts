@@ -14,6 +14,9 @@ const SECRET = process.env.NEXT_PUBLIC_WC_SECRET;
  */
 export function fixEncoding(str: string): string {
   if (!str || typeof str !== 'string') return str;
+  // Only attempt the latin1→utf8 repair when the string actually shows mojibake markers
+  // (Ã/Â/â lead bytes). Running it on clean UTF-8 would CORRUPT it (e.g. "—" → ).
+  if (!/[Â-Ãâ]/.test(str)) return str;
   try {
     const fixed = Buffer.from(str, 'latin1').toString('utf8');
     const replacements = (fixed.match(/�/g) || []).length;

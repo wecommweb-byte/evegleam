@@ -24,15 +24,66 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: 'Eve Gleam | Premium Press-On Nails & Jewelry',
-  description: 'Premium accessories for the modern woman. Handcrafted press-on nails and luxury jewelry.',
+  metadataBase: new URL('https://www.evegleam.com'),
+  title: {
+    default: 'Eve Gleam | Press-On Nails in Pakistan – Premium Artificial Nails',
+    template: '%s | Eve Gleam',
+  },
+  description:
+    'Buy premium press-on nails online in Pakistan. Salon-quality artificial nails — reusable, easy to apply at home. Bridal, French & everyday designs. Cash on delivery nationwide.',
+  keywords: [
+    'press on nails Pakistan',
+    'artificial nails Pakistan',
+    'fake nails price in Pakistan',
+    'press on nails online',
+    'bridal press on nails',
+    'French tip press on nails',
+    'nail extensions at home',
+    'reusable press on nails',
+    'glue on nails Pakistan',
+    'Eve Gleam nails',
+  ],
   verification: {
     google: 'qqn8VFlgS4wI0xceVbIfKgps5NwWKbsNj65aORXLqf0',
+  },
+  openGraph: {
+    siteName: 'Eve Gleam',
+    type: 'website',
+    locale: 'en_PK',
+    url: 'https://www.evegleam.com',
+    title: 'Eve Gleam | Press-On Nails in Pakistan',
+    description:
+      'Premium press-on nails delivered across Pakistan. Salon-quality, reusable, easy to apply at home. Cash on delivery available.',
+    images: [{ url: '/logo.png', width: 512, height: 512, alt: 'Eve Gleam' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Eve Gleam | Press-On Nails in Pakistan',
+    description: 'Premium press-on nails delivered across Pakistan. Cash on delivery available.',
   },
   icons: {
     icon: [{ url: '/logo.png', type: 'image/png' }],
     apple: [{ url: '/logo.png', type: 'image/png' }],
   },
+};
+
+const orgJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Eve Gleam',
+  url: 'https://www.evegleam.com',
+  logo: 'https://www.evegleam.com/logo.png',
+  sameAs: [
+    'https://www.facebook.com/share/191e6opxBv/',
+    'https://www.instagram.com/evegleam_nails',
+  ],
+};
+
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Eve Gleam',
+  url: 'https://www.evegleam.com',
 };
 
 export default function RootLayout({
@@ -63,6 +114,14 @@ export default function RootLayout({
             alt=""
           />
         </noscript>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
         <Analytics />
         <Suspense fallback={null}>
           <TopLoader />

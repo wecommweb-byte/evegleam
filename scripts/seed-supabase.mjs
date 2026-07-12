@@ -26,6 +26,8 @@ const sb = createClient(SUPABASE_URL, SERVICE_KEY, { auth: { persistSession: fal
 
 function fixEncoding(str) {
   if (!str || typeof str !== 'string') return str;
+  // Only repair when mojibake markers are present; re-decoding clean UTF-8 corrupts it.
+  if (!/[Â-Ãâ]/.test(str)) return str;
   try {
     const fixed = Buffer.from(str, 'latin1').toString('utf8');
     if ((fixed.match(/�/g) || []).length < 3) return fixed;
