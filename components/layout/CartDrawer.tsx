@@ -61,7 +61,7 @@ export default function CartDrawer() {
                       >
                         <div className="w-20 h-24 relative rounded-md overflow-hidden flex-shrink-0 bg-blush">
                           {item.image && (
-                            <Image src={item.image} alt={item.name} fill className="object-cover" unoptimized />
+                            <Image src={item.image} alt={item.name} fill sizes="80px" className="object-cover" />
                           )}
                         </div>
                         <div className="flex-1 flex flex-col justify-between">

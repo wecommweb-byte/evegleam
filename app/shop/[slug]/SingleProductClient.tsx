@@ -148,7 +148,7 @@ export default function SingleProductClient({ slug }: { slug: string }) {
                   transition={{ duration: 0.3 }}
                   className="absolute inset-0"
                 >
-                  <Image src={activeImage} alt={product.name} fill unoptimized className="object-cover" />
+                  <Image src={activeImage} alt={product.name} fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
                 </motion.div>
               </AnimatePresence>
             </div>
@@ -162,7 +162,7 @@ export default function SingleProductClient({ slug }: { slug: string }) {
                       activeImage === img.src ? 'border-gold' : 'border-transparent hover:border-gold/50'
                     }`}
                   >
-                    <Image src={img.src} alt="Thumbnail" fill unoptimized className="object-cover" />
+                    <Image src={img.src} alt="Thumbnail" fill sizes="80px" className="object-cover" />
                   </button>
                 ))}
               </div>

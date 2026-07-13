@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import { CheckCircle, Copy, Check, Truck, Gift } from 'lucide-react';
 
 const FLAT_RATE = 199;
@@ -304,7 +305,7 @@ export default function CheckoutPage() {
                     <div key={`${item.id}-${item.variationId}`} className="flex gap-4">
                       <div className="w-16 h-16 bg-blush rounded-lg overflow-hidden flex-shrink-0 relative">
                         {item.image && (
-                          <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                          <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover" />
                         )}
                         <span className="absolute -top-2 -right-2 bg-dark text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
                           {item.quantity}
