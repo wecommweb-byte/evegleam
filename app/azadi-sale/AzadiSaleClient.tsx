@@ -157,7 +157,7 @@ export default function AzadiSaleClient() {
           >
             <a href="#azadi-edit" className="w-full sm:w-auto">
               <button className="w-full sm:w-auto px-9 py-3.5 rounded-full bg-white text-[#01411C] font-medium hover:bg-brand-pink transition-colors">
-                Shop the Azadi Edit
+                Shop the Azadi Offer
               </button>
             </a>
             <a href="#bundles" className="w-full sm:w-auto">
