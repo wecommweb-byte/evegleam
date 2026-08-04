@@ -44,7 +44,7 @@ function Countdown() {
   const beforeCutoff = now === null || now < DELIVERY_CUTOFF;
   const target = beforeCutoff ? DELIVERY_CUTOFF : INDEPENDENCE_DAY;
   const label = beforeCutoff
-    ? 'Order within this time to get it before 14 August'
+    ? 'Time left to order and wear them on 14 August'
     : 'Counting down to Independence Day';
   const t = breakdown(now === null ? 0 : target - now);
 
@@ -143,8 +143,8 @@ export default function AzadiSaleClient() {
             transition={{ duration: 0.6, delay: 0.12 }}
             className="text-white/85 font-body text-lg mt-5 max-w-xl mx-auto"
           >
-            Celebrate in green and white. Flat 50% off every press-on nail set,
-            delivered across Pakistan with cash on delivery.
+            Green, white and ready for the big day. Flat 50% off every press-on set —
+            a salon-worthy manicure at home, in ten minutes flat.
           </motion.p>
 
           <Countdown />
@@ -173,9 +173,9 @@ export default function AzadiSaleClient() {
       <section className="bg-white border-b border-blush">
         <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-blush">
           {[
-            { Icon: BadgePercent, title: 'Flat 50% Off', sub: 'On every nail set, sitewide' },
-            { Icon: Truck, title: 'Free Delivery', sub: 'On orders above Rs. 3,000' },
-            { Icon: ShieldCheck, title: 'Cash on Delivery', sub: 'Pay when it reaches your door' },
+            { Icon: BadgePercent, title: 'Flat 50% Off', sub: 'Every design, no exceptions' },
+            { Icon: Truck, title: 'Free Delivery', sub: 'On orders over Rs. 3,000' },
+            { Icon: ShieldCheck, title: 'Cash on Delivery', sub: 'Pay at your doorstep' },
           ].map(({ Icon, title, sub }) => (
             <div key={title} className="flex items-center justify-center gap-3 px-6 py-5 text-center sm:text-left">
               <Icon size={22} className="text-[#01411C] shrink-0" />
@@ -258,8 +258,8 @@ export default function AzadiSaleClient() {
               Bundle &amp; Save More
             </h2>
             <p className="text-gray-600 font-body max-w-xl mx-auto">
-              Pick any 4 nail sets and save on the lot — or choose the Gift Bundle and get a
-              fifth set free. Every bundle clears the free-delivery threshold too.
+              Pick any four nail sets for one price — or choose the Gift Bundle and get a
+              fifth set free as a surprise.
             </p>
           </div>
 
@@ -293,8 +293,8 @@ export default function AzadiSaleClient() {
             Shop All Designs
           </h2>
           <p className="text-gray-600 font-body max-w-xl mx-auto">
-            The full collection — every set discounted for Azadi, from French tips and florals
-            to bold reds and blacks.
+            The full collection at half price — French tips, florals, chrome, cat-eye and
+            bold reds. Something for every 14 August outfit.
           </p>
         </div>
 
@@ -338,9 +338,9 @@ export default function AzadiSaleClient() {
             Want them on the 14th?
           </h3>
           <p className="text-white/80 font-body max-w-lg mx-auto mb-7">
-            Place your order by <span className="text-white font-medium">10 August</span> so
-            we can pack and deliver it in time for Independence Day. Orders after that still
-            ship — they just arrive a little after the celebrations.
+            Order by <span className="text-white font-medium">10 August</span> and we&apos;ll
+            pack and deliver in time for Independence Day. Later orders still ship — they just
+            land after the celebrations.
           </p>
           <a href="#azadi-edit">
             <button className="px-9 py-3.5 rounded-full bg-white text-[#01411C] font-medium hover:bg-brand-pink transition-colors">
