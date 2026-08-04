@@ -3,12 +3,17 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Truck, BadgePercent, ShieldCheck, Star, Clock } from 'lucide-react';
+import { Truck, BadgePercent, ShieldCheck, Star, Clock, Gift } from 'lucide-react';
 import ProductCard from '@/components/shop/ProductCard';
 import { Product } from '@/lib/types';
 
 // Curated "Azadi Edit" — greens and whites to match the flag, in display order.
 const AZADI_PICKS = [57, 108, 90, 91, 88, 35, 50, 39, 86, 92, 87, 43];
+
+const BUNDLE_SLUGS = ['basic-bundle', 'bridal-bundle', 'gift-bundle'];
+
+// How many of the full catalogue to reveal per "Load More" click.
+const PAGE_SIZE = 20;
 
 // Pakistan Standard Time is UTC+5 — pin the deadlines so they read the same for everyone.
 const DELIVERY_CUTOFF = new Date('2026-08-10T23:59:59+05:00').getTime();
@@ -76,6 +81,9 @@ function Countdown() {
 
 export default function AzadiSaleClient() {
   const [picks, setPicks] = useState<Product[]>([]);
+  const [bundles, setBundles] = useState<Product[]>([]);
+  const [allNails, setAllNails] = useState<Product[]>([]);
+  const [visible, setVisible] = useState(PAGE_SIZE);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -85,8 +93,16 @@ export default function AzadiSaleClient() {
         const all = Array.isArray(data) ? data : [];
         const byId = new Map(all.map(p => [p.id, p]));
         setPicks(AZADI_PICKS.map(id => byId.get(id)).filter(Boolean) as Product[]);
+        setBundles(
+          BUNDLE_SLUGS.map(slug => all.find(p => p.slug === slug)).filter(Boolean) as Product[]
+        );
+        setAllNails(all.filter(p => !BUNDLE_SLUGS.includes(p.slug) && p.images?.length > 0));
       })
-      .catch(() => setPicks([]))
+      .catch(() => {
+        setPicks([]);
+        setBundles([]);
+        setAllNails([]);
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -139,16 +155,16 @@ export default function AzadiSaleClient() {
             transition={{ delay: 0.4 }}
             className="mt-10 flex flex-col sm:flex-row gap-3 justify-center"
           >
-            <Link href="#azadi-edit">
+            <a href="#azadi-edit" className="w-full sm:w-auto">
               <button className="w-full sm:w-auto px-9 py-3.5 rounded-full bg-white text-[#01411C] font-medium hover:bg-brand-pink transition-colors">
                 Shop the Azadi Edit
               </button>
-            </Link>
-            <Link href="/bundles">
+            </a>
+            <a href="#bundles" className="w-full sm:w-auto">
               <button className="w-full sm:w-auto px-9 py-3.5 rounded-full border border-white/40 text-white font-medium hover:bg-white/10 transition-colors">
-                Build a Bundle & Save More
+                Build a Bundle &amp; Save More
               </button>
-            </Link>
+            </a>
           </motion.div>
         </div>
       </section>
@@ -223,12 +239,96 @@ export default function AzadiSaleClient() {
         )}
 
         <div className="mt-14 text-center">
-          <Link href="/shop">
+          <a href="#all-designs">
             <button className="px-10 py-3 rounded-full border-2 border-brand-gold text-brand-gold font-medium hover:bg-brand-gold hover:text-brand-dark transition-colors">
-              View All 60+ Designs
+              View All Designs
             </button>
-          </Link>
+          </a>
         </div>
+      </section>
+
+      {/* Bundles */}
+      <section id="bundles" className="bg-white border-y border-blush py-16 scroll-mt-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <span className="inline-flex items-center gap-1.5 bg-brand-gold/15 text-brand-gold text-xs font-semibold px-3 py-1.5 rounded-full mb-4">
+              <Gift size={12} /> Best Value This Azadi
+            </span>
+            <h2 className="font-heading italic text-[clamp(2rem,4vw,3rem)] text-dark mb-3">
+              Bundle &amp; Save More
+            </h2>
+            <p className="text-gray-600 font-body max-w-xl mx-auto">
+              Pick any 4 nail sets and save on the lot — or choose the Gift Bundle and get a
+              fifth set free. Every bundle clears the free-delivery threshold too.
+            </p>
+          </div>
+
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="animate-pulse flex flex-col h-[350px] bg-bg rounded-2xl p-4">
+                  <div className="bg-blush rounded-xl aspect-square w-full mb-4" />
+                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-2" />
+                  <div className="mt-auto h-10 bg-blush-deep rounded-full w-full" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto">
+              {bundles.map((b, i) => (
+                <ProductCard key={b.id} product={b} index={i} />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Full catalogue */}
+      <section id="all-designs" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 scroll-mt-20">
+        <div className="text-center mb-12">
+          <span className="inline-flex items-center gap-1.5 bg-[#01411C]/10 text-[#01411C] text-xs font-semibold px-3 py-1.5 rounded-full mb-4">
+            <BadgePercent size={12} /> Everything 50% Off
+          </span>
+          <h2 className="font-heading italic text-[clamp(2rem,4vw,3rem)] text-dark mb-3">
+            Shop All Designs
+          </h2>
+          <p className="text-gray-600 font-body max-w-xl mx-auto">
+            The full collection — every set discounted for Azadi, from French tips and florals
+            to bold reds and blacks.
+          </p>
+        </div>
+
+        {loading ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="animate-pulse flex flex-col h-[350px] bg-white rounded-2xl p-4">
+                <div className="bg-blush rounded-xl aspect-square w-full mb-4" />
+                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2" />
+                <div className="h-4 bg-gray-200 rounded w-1/4 mb-4" />
+                <div className="mt-auto h-10 bg-blush-deep rounded-full w-full" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+              {allNails.slice(0, visible).map((p, i) => (
+                <ProductCard key={p.id} product={p} index={i} />
+              ))}
+            </div>
+
+            {visible < allNails.length && (
+              <div className="mt-14 text-center">
+                <button
+                  onClick={() => setVisible(v => v + PAGE_SIZE)}
+                  className="px-10 py-3 rounded-full border-2 border-brand-gold text-brand-gold font-medium hover:bg-brand-gold hover:text-brand-dark transition-colors"
+                >
+                  Load More ({allNails.length - visible} left)
+                </button>
+              </div>
+            )}
+          </>
+        )}
       </section>
 
       {/* Delivery cutoff notice */}
@@ -242,11 +342,11 @@ export default function AzadiSaleClient() {
             we can pack and deliver it in time for Independence Day. Orders after that still
             ship — they just arrive a little after the celebrations.
           </p>
-          <Link href="#azadi-edit">
+          <a href="#azadi-edit">
             <button className="px-9 py-3.5 rounded-full bg-white text-[#01411C] font-medium hover:bg-brand-pink transition-colors">
               Pick Your Set
             </button>
-          </Link>
+          </a>
         </div>
       </section>
     </div>
