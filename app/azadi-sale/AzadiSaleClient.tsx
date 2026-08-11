@@ -106,6 +106,13 @@ export default function AzadiSaleClient() {
       .finally(() => setLoading(false));
   }, []);
 
+  // Once the delivery cutoff passes, stop promising pre-14-August delivery.
+  // Defaults to the honest post-cutoff copy so a stale claim is never shown.
+  const [beforeCutoff, setBeforeCutoff] = useState(false);
+  useEffect(() => {
+    setBeforeCutoff(Date.now() < DELIVERY_CUTOFF);
+  }, []);
+
   return (
     <div className="bg-bg min-h-screen">
       {/* Hero */}
@@ -335,12 +342,22 @@ export default function AzadiSaleClient() {
       <section className="px-4 pb-20">
         <div className="max-w-4xl mx-auto bg-[#01411C] rounded-3xl px-8 py-10 text-center">
           <h3 className="font-heading italic text-2xl sm:text-3xl text-white mb-3">
-            Want them on the 14th?
+            {beforeCutoff ? 'Want them on the 14th?' : 'The Azadi Sale is still on'}
           </h3>
           <p className="text-white/80 font-body max-w-lg mx-auto mb-7">
-            Order by <span className="text-white font-medium">10 August</span> and we&apos;ll
-            pack and deliver in time for Independence Day. Later orders still ship — they just
-            land after the celebrations.
+            {beforeCutoff ? (
+              <>
+                Order by <span className="text-white font-medium">10 August</span> and
+                we&apos;ll pack and deliver in time for Independence Day. Later orders still
+                ship — they just land after the celebrations.
+              </>
+            ) : (
+              <>
+                Orders placed now arrive just after Independence Day — at the same
+                <span className="text-white font-medium"> flat 50% off</span>, with cash on
+                delivery anywhere in Pakistan.
+              </>
+            )}
           </p>
           <a href="#azadi-edit">
             <button className="px-9 py-3.5 rounded-full bg-white text-[#01411C] font-medium hover:bg-brand-pink transition-colors">
