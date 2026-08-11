@@ -26,6 +26,8 @@ export interface Product {
   type: string;
   featured: boolean;
   tags: { id: number; name: string; slug: string }[];
+  stock_status?: string;
+  stock_quantity?: number | null;
 }
 
 export interface Category {

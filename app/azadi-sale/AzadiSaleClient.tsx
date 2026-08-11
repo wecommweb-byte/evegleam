@@ -7,8 +7,11 @@ import { Truck, BadgePercent, ShieldCheck, Star, Clock, Gift } from 'lucide-reac
 import ProductCard from '@/components/shop/ProductCard';
 import { Product } from '@/lib/types';
 
-// Curated "Azadi Edit" — greens and whites to match the flag, in display order.
-const AZADI_PICKS = [57, 108, 90, 91, 88, 35, 50, 39, 86, 92, 87, 43];
+// Curated "Azadi Edit" — greens and whites to match the flag, in preference order.
+// Deliberately longer than the 12 slots shown: sold-out picks are filtered out and the
+// spares below fill the gaps, so the grid stays full without needing manual edits.
+const AZADI_PICKS = [57, 108, 90, 91, 88, 35, 50, 39, 86, 92, 87, 43, 83, 85, 56];
+const AZADI_EDIT_SIZE = 12;
 
 const BUNDLE_SLUGS = ['basic-bundle', 'bridal-bundle', 'gift-bundle'];
 
@@ -92,11 +95,22 @@ export default function AzadiSaleClient() {
       .then((data: Product[]) => {
         const all = Array.isArray(data) ? data : [];
         const byId = new Map(all.map(p => [p.id, p]));
-        setPicks(AZADI_PICKS.map(id => byId.get(id)).filter(Boolean) as Product[]);
+        setPicks(
+          AZADI_PICKS.map(id => byId.get(id))
+            .filter((p): p is Product => !!p && p.stock_status !== 'outofstock')
+            .slice(0, AZADI_EDIT_SIZE)
+        );
         setBundles(
           BUNDLE_SLUGS.map(slug => all.find(p => p.slug === slug)).filter(Boolean) as Product[]
         );
-        setAllNails(all.filter(p => !BUNDLE_SLUGS.includes(p.slug) && p.images?.length > 0));
+        // Keep sold-out designs visible (they still get a Sold Out badge) but sink them
+        // below everything that can actually be bought.
+        const sellable = (p: Product) => (p.stock_status === 'outofstock' ? 1 : 0);
+        setAllNails(
+          all
+            .filter(p => !BUNDLE_SLUGS.includes(p.slug) && p.images?.length > 0)
+            .sort((a, b) => sellable(a) - sellable(b))
+        );
       })
       .catch(() => {
         setPicks([]);

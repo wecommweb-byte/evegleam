@@ -59,6 +59,34 @@ export default function CheckoutPage() {
     setError('');
 
     try {
+      // Re-check stock before taking the customer's details any further. WooCommerce is
+      // still the final authority and will reject a genuinely out-of-stock line item, but
+      // catching it here gives a clear message naming the item instead of a generic failure.
+      const BUNDLE_SLUGS = ['basic-bundle', 'bridal-bundle', 'gift-bundle'];
+      const checkable = items.filter(item => !BUNDLE_SLUGS.includes(item.slug));
+      const stockChecks = await Promise.all(
+        checkable.map(async item => {
+          try {
+            const res = await fetch(`/api/products/${item.id}`);
+            if (!res.ok) return null;
+            const p = await res.json();
+            return p?.stock_status === 'outofstock' ? item.name : null;
+          } catch {
+            return null; // never block checkout on a failed lookup
+          }
+        })
+      );
+      const soldOut = stockChecks.filter(Boolean);
+      if (soldOut.length) {
+        setError(
+          `Sorry, ${soldOut.join(' and ')} just sold out. Please remove ${
+            soldOut.length > 1 ? 'those items' : 'that item'
+          } from your cart to continue.`
+        );
+        setLoading(false);
+        return;
+      }
+
       // Bundle selections to include as order note
       const bundleNote = items
         .filter(item => item.variation)

@@ -77,7 +77,7 @@ export default function SingleProductClient({ slug }: { slug: string }) {
   }, [product?.id]);
 
   const handleAdd = () => {
-    if (!product) return;
+    if (!product || product.stock_status === 'outofstock') return;
     const itemPrice = parseInt(product.price || '2500');
     addToCart({
       id: product.id,
@@ -123,6 +123,7 @@ export default function SingleProductClient({ slug }: { slug: string }) {
   const price = parseInt(product.price || '3500').toLocaleString();
   const regularPrice = product.regular_price ? parseInt(product.regular_price) : null;
   const isOnSale = regularPrice && regularPrice > parseInt(product.price || '0');
+  const isSoldOut = product.stock_status === 'outofstock';
 
   return (
     <div className="bg-bg min-h-screen pb-24">
@@ -177,10 +178,19 @@ export default function SingleProductClient({ slug }: { slug: string }) {
                 <div className="flex items-center gap-3 flex-wrap">
                   <span className="font-heading text-3xl text-brand-dark">₨ {price}</span>
                   <span className="text-gray-400 line-through text-xl">₨ {regularPrice!.toLocaleString()}</span>
-                  <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">50% OFF</span>
+                  {isSoldOut ? (
+                    <span className="bg-gray-200 text-gray-600 text-xs font-bold px-2 py-1 rounded-full">SOLD OUT</span>
+                  ) : (
+                    <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">50% OFF</span>
+                  )}
                 </div>
               ) : (
-                <span className="font-heading text-3xl text-brand-dark">₨ {price}</span>
+                <div className="flex items-center gap-3 flex-wrap">
+                  <span className="font-heading text-3xl text-brand-dark">₨ {price}</span>
+                  {isSoldOut && (
+                    <span className="bg-gray-200 text-gray-600 text-xs font-bold px-2 py-1 rounded-full">SOLD OUT</span>
+                  )}
+                </div>
               )}
             </div>
             
@@ -199,11 +209,18 @@ export default function SingleProductClient({ slug }: { slug: string }) {
               <div className="flex space-x-4">
                 <button
                   onClick={handleAdd}
+                  disabled={isSoldOut}
                   className={`flex-1 flex items-center justify-center py-4 rounded-full font-medium transition-all duration-300 ${
-                    added ? 'bg-brand-pink text-brand-dark scale-[0.98]' : 'bg-brand-pink text-brand-dark hover:bg-brand-gold hover:text-white shadow-soft'
+                    isSoldOut
+                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                      : added
+                      ? 'bg-brand-pink text-brand-dark scale-[0.98]'
+                      : 'bg-brand-pink text-brand-dark hover:bg-brand-gold hover:text-white shadow-soft'
                   }`}
                 >
-                  {added ? (
+                  {isSoldOut ? (
+                    <span className="flex items-center">Sold Out</span>
+                  ) : added ? (
                     <span className="flex items-center">✓ Added to Bag</span>
                   ) : (
                     <span className="flex items-center"><ShoppingBag size={20} className="mr-2" /> Add to Bag</span>

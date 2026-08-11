@@ -19,11 +19,14 @@ export default function ProductCard({ product, index = 0 }: { product: Product, 
   const price = product.price ? parseInt(product.price) : 2500;
   const regularPrice = product.regular_price ? parseInt(product.regular_price) : null;
   const isOnSale = !isBundle && regularPrice && regularPrice > price;
+  // Bundles are built from other products, so they are never stock-managed themselves.
+  const isSoldOut = !isBundle && product.stock_status === 'outofstock';
   const imageSrc = product.images?.[0]?.src || 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=600';
 
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (isSoldOut) return;
     addToCart({
       id: product.id,
       slug: product.slug,
@@ -45,14 +48,23 @@ export default function ProductCard({ product, index = 0 }: { product: Product, 
           fill
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           loading={index > 3 ? "lazy" : "eager"}
-          className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+          className={`object-cover transition-transform duration-500 ease-out group-hover:scale-105 ${
+            isSoldOut ? 'grayscale opacity-60' : ''
+          }`}
         />
+        {isSoldOut && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center">
+            <span className="bg-dark/80 text-white text-xs font-semibold tracking-wide px-4 py-2 rounded-full">
+              Sold Out
+            </span>
+          </div>
+        )}
         {isBundle && (
           <div className="absolute top-2 left-2 bg-brand-gold text-white text-xs font-bold px-2 py-1 rounded-full z-10 flex items-center gap-1">
             <Gift size={10} /> Bundle
           </div>
         )}
-        {isOnSale && (
+        {isOnSale && !isSoldOut && (
           <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full z-10">
             50% OFF
           </div>
@@ -92,6 +104,10 @@ export default function ProductCard({ product, index = 0 }: { product: Product, 
           {isBundle ? (
             <div className="w-full py-2.5 rounded-full bg-brand-gold text-white font-medium flex items-center justify-center gap-2">
               <Gift size={15} /> Build Your Bundle
+            </div>
+          ) : isSoldOut ? (
+            <div className="w-full py-2.5 rounded-full border border-gray-200 bg-gray-50 text-gray-400 font-medium flex items-center justify-center cursor-not-allowed">
+              Sold Out
             </div>
           ) : (
             <button
