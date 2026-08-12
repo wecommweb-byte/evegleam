@@ -4,7 +4,8 @@ import { useCart } from '@/context/CartContext';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
-import { CheckCircle, Copy, Check, Truck, Gift } from 'lucide-react';
+import { CheckCircle, Copy, Check, Truck, Gift, MessageCircle } from 'lucide-react';
+import { whatsappLink } from '@/lib/site';
 
 const FLAT_RATE = 199;
 const FREE_SHIPPING_MIN = 3000;
@@ -16,6 +17,12 @@ export default function CheckoutPage() {
   const grandTotal = total + shippingCost;
   const [loading, setLoading] = useState(false);
   const [orderId, setOrderId] = useState<number | null>(null);
+  const [placedOrder, setPlacedOrder] = useState<{
+    lines: string[];
+    grandTotal: number;
+    shippingCost: number;
+    customerName: string;
+  } | null>(null);
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
 
@@ -153,6 +160,14 @@ export default function CheckoutPage() {
 
       if (data.id) {
         setOrderId(data.id);
+        // Snapshot the order before clearCart() empties `items`, so the confirmation
+        // screen can still build the WhatsApp summary.
+        setPlacedOrder({
+          lines: items.map(i => `• ${i.name} x${i.quantity} — Rs. ${(i.price * i.quantity).toLocaleString()}`),
+          grandTotal,
+          shippingCost,
+          customerName: formData.firstName,
+        });
         if (typeof window !== 'undefined' && (window as any).fbq) {
           (window as any).fbq('track', 'Purchase', {
             content_ids: items.map(item => String(item.id)),
@@ -172,6 +187,25 @@ export default function CheckoutPage() {
       setLoading(false);
     }
   };
+
+  // Pre-filled WhatsApp order summary for the confirmation screen
+  const whatsappHref = orderId && placedOrder
+    ? whatsappLink(
+        [
+          `Assalam-o-Alaikum Eve Gleam! 👋`,
+          ``,
+          `I've just placed order #${orderId}.`,
+          ``,
+          ...placedOrder.lines,
+          ``,
+          placedOrder.shippingCost > 0
+            ? `Total: Rs. ${placedOrder.grandTotal.toLocaleString()} (incl. Rs. ${placedOrder.shippingCost} delivery)`
+            : `Total: Rs. ${placedOrder.grandTotal.toLocaleString()} (free delivery)`,
+          ``,
+          `Please confirm my order. Shukriya!`,
+        ].join('\n')
+      )
+    : '';
 
   // ✅ Success screen with Order ID
   if (orderId) {
@@ -215,6 +249,20 @@ export default function CheckoutPage() {
               Save this ID to track your order
             </p>
           </div>
+
+          {/* WhatsApp confirmation — hidden entirely if no number is configured */}
+          {whatsappHref && (
+            <div className="mb-8">
+              <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="block">
+                <button className="w-full px-8 py-4 rounded-full bg-[#25D366] text-white font-medium hover:bg-[#1DA851] transition-colors flex items-center justify-center gap-2">
+                  <MessageCircle size={20} /> Confirm Your Order on WhatsApp
+                </button>
+              </a>
+              <p className="text-xs text-gray-400 mt-3 font-body">
+                Tap to send us your order details — we&apos;ll confirm and share delivery updates.
+              </p>
+            </div>
+          )}
 
           <div className="space-y-3">
             <Link href="/shop" className="block">

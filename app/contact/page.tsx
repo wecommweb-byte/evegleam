@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 
 import { Instagram, Facebook, Phone, Mail, MapPin } from 'lucide-react';
 import AnimatedSection from '@/components/ui/AnimatedSection';
+import { whatsappLink } from '@/lib/site';
 
 export default function ContactPage() {
   const [loading, setLoading] = useState(false);
@@ -51,18 +52,20 @@ export default function ContactPage() {
               </div>
             </div>
 
-            {/* WhatsApp CTA */}
-            <motion.a
-              href="https://wa.me/923001234567"
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.02 }}
-              className="inline-flex items-center justify-center bg-[#25D366] text-white px-8 py-4 rounded-full font-medium text-lg hover:bg-[#1DA851] transition-colors shadow-soft max-w-sm mb-12 relative overflow-hidden"
-            >
-              <span className="absolute left-6 w-3 h-3 bg-white rounded-full animate-ping opacity-75" />
-              <span className="absolute left-6 w-3 h-3 bg-white rounded-full" />
-              <span className="ml-8">Chat on WhatsApp</span>
-            </motion.a>
+            {/* WhatsApp CTA — hidden until a real number is configured in lib/site.ts */}
+            {whatsappLink('Hi Eve Gleam! I have a question.') && (
+              <motion.a
+                href={whatsappLink('Hi Eve Gleam! I have a question.')}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.02 }}
+                className="inline-flex items-center justify-center bg-[#25D366] text-white px-8 py-4 rounded-full font-medium text-lg hover:bg-[#1DA851] transition-colors shadow-soft max-w-sm mb-12 relative overflow-hidden"
+              >
+                <span className="absolute left-6 w-3 h-3 bg-white rounded-full animate-ping opacity-75" />
+                <span className="absolute left-6 w-3 h-3 bg-white rounded-full" />
+                <span className="ml-8">Chat on WhatsApp</span>
+              </motion.a>
+            )}
 
             {/* Socials */}
             <div>
